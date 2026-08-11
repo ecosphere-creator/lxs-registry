@@ -1,0 +1,48 @@
+name: notifications
+domain: notifications
+version: 1.0.0
+publisher: stuff8
+status: unverified
+license: mit
+summary: 'Notifications: in-app + email delivery, per-tenant channels, WebSocket push'
+targets:
+- linux/amd64
+artifacts:
+  linux/amd64:
+    path: linux-amd64/notifications
+    sha256: 4ee029b9636b5f512fcadcc1b0e9cb25e8417e63bd20f2f579c1f7f71cb919b7
+    size: 11615536
+contract:
+  version: 1
+  api: notifications REST API (ingest + list + read + ws)
+  env:
+    required:
+    - PORT
+    - API_BASE_PATH
+    - MONGODB_URI
+    - JWT_SECRET
+    optional:
+    - CORS_ALLOWED_ORIGINS
+    - AUTH_BASE_URL
+  db: mongodb@7
+  network:
+    inbound:
+    - http
+    outbound:
+    - http
+  resources:
+    memory: 128m
+    disk: 256m
+    startup_seconds: 5
+runtime:
+  base: self-contained-static
+  libc: musl
+  dependencies: []
+provenance:
+  source: git@github.com:kelastanpatembok/notifications.git
+  commit: 4eaecf67c4bcc8c1e1b449205f2249700dd22cc3
+  built_by: eco@0.2.0
+  built_at: 2026-08-11T17:23:36Z
+  target: x86_64-unknown-linux-musl
+release:
+- 1.0.0

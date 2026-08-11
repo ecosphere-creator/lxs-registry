@@ -1,5 +1,5 @@
 name: storage
-domain: photos
+domain: storage
 version: 1.0.0
 publisher: stuff8
 status: unverified
@@ -10,8 +10,8 @@ targets:
 artifacts:
   linux/amd64:
     path: linux-amd64/storage
-    sha256: 5d0c35a7bac2c796b312b0d9de657d6ffc32574ef8d083a39e24496396c1f542
-    size: 21228392
+    sha256: 46c9119d186c7ac7d150f9b79955cb76de8d18ef43ec16aead1baa4f2355fb5e
+    size: 21228488
 contract:
   version: 1
   api: photos REST API (upload + serve + media metadata)
@@ -48,10 +48,10 @@ runtime:
   dependencies:
   - ffmpeg
 provenance:
-  source: git@github.com:kelastanpatembok/photos.git
-  commit: 63fed5c8f76a299ad9eaf835844351a3b12aed84
+  source: git@github.com:kelastanpatembok/storage.git
+  commit: 281406d2946f307cf37b9aed952d1bf277cad4f7
   built_by: eco@0.2.0
-  built_at: 2026-08-11T22:43:47Z
+  built_at: 2026-08-11T23:11:10Z
   target: x86_64-unknown-linux-musl
 release:
 - 1.0.0

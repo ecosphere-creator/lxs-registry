@@ -30,6 +30,8 @@ contract:
     - MAX_DOCUMENT_MB
     - MAX_IMAGE_PIXELS
     - MAX_VIDEO_MB
+    defaults:
+      S3_BUCKET: stuff8-storage
   db: none
   network:
     inbound:
@@ -49,7 +51,7 @@ provenance:
   source: git@github.com:kelastanpatembok/photos.git
   commit: 63fed5c8f76a299ad9eaf835844351a3b12aed84
   built_by: eco@0.2.0
-  built_at: 2026-08-11T22:10:24Z
+  built_at: 2026-08-11T22:11:48Z
   target: x86_64-unknown-linux-musl
 release:
 - 1.0.1

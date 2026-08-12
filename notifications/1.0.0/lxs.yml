@@ -5,6 +5,7 @@ publisher: stuff8
 status: unverified
 license: mit
 summary: 'Notifications: in-app + email delivery, per-tenant channels, WebSocket push'
+category: Communication
 targets:
 - linux/amd64
 artifacts:

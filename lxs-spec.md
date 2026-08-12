@@ -27,6 +27,8 @@ name: auth                      # LXS name (the reusable capability)
 domain: auth                    # the Domain this implements — Domain ≠ LXS.
                                 # A Domain may have several LXS (shipping-api + shipping-worker)
 version: 1.1.0                  # immutable semantic version
+category: Identity               # browsable category (Identity, Communication,
+                                 # Content, Media, Commerce, Search, Infrastructure, ...)
 publisher: stuff8               # publisher identity
 status: verified                # verified | unverified | deprecated | private | enterprise
 license: mit
@@ -90,6 +92,7 @@ release:
 | `name` | yes | lowercase, `[a-z0-9-]`. The capability identity. |
 | `domain` | yes | the Domain this implements. Distinct from `name`. |
 | `version` | yes | `MAJOR.MINOR.PATCH`. Immutable once published. |
+| `category` | yes | browsable category used by the LXS Registry domain (Identity, Communication, Content, Media, Commerce, Search, Infrastructure, AI, ...). |
 | `publisher` | yes | identity of the authoring org/account. |
 | `status` | yes | one of `verified/unverified/deprecated/private/enterprise`. |
 | `targets` | yes | ≥1 `linux/<arch>` the version ships. |

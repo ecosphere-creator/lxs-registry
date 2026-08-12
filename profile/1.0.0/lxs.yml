@@ -5,6 +5,7 @@ publisher: stuff8
 status: unverified
 license: mit
 summary: 'User profiles: bio, experience, education, skills, certifications, links'
+category: Identity
 targets:
 - linux/amd64
 artifacts:

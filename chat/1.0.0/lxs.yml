@@ -5,6 +5,7 @@ publisher: stuff8
 status: unverified
 license: mit
 summary: 'Chat: realtime messaging via WebSocket, presence, Redis pub/sub'
+category: Communication
 targets:
 - linux/amd64
 artifacts:

@@ -5,6 +5,7 @@ publisher: stuff8
 status: unverified
 license: mit
 summary: 'Photos & media: uploads, image/video processing, S3 storage, thumbnails'
+category: Media
 targets:
 - linux/amd64
 artifacts:

@@ -5,6 +5,7 @@ publisher: stuff8
 status: unverified
 license: mit
 summary: 'Email: transactional delivery via Brevo, templates, rate limits, warmup'
+category: Communication
 targets:
 - linux/amd64
 artifacts:

@@ -5,6 +5,7 @@ publisher: stuff8
 status: unverified
 license: mit
 summary: 'Authentication: login, register, JWT, email verification, avatars'
+category: Identity
 targets:
 - linux/amd64
 artifacts:

@@ -5,6 +5,7 @@ publisher: stuff8
 status: unverified
 license: mit
 summary: 'Articles & content: CRUD, categories, search, admin publishing workflow'
+category: Content
 targets:
 - linux/amd64
 artifacts:

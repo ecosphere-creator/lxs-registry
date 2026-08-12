@@ -1,0 +1,60 @@
+name: slides
+domain: slides
+version: 1.0.0
+publisher: getecosphere
+status: unverified
+license: mit
+summary: Slides — slide decks (books), editor prefs, image/poll-template libraries, poll votes, and reader sessions
+targets:
+- linux/amd64
+artifacts:
+  linux/amd64:
+    path: linux-amd64/slides
+    sha256: cebe4b72bc7a834fe76aa05d7f03af5d4ee19544380ec4d39c62ce03b1f2a4d9
+    size: 27963952
+contract:
+  version: 1
+  api: slides REST API (/api/book, /api/book/:id, /api/book/catalog, /api/slides-files/*, author assets, poll templates, sessions)
+  env:
+    required:
+    - SERVER_PORT
+    - MONGODB_URI
+    - JWT_SECRET
+    optional:
+    - API_BASE_URL
+    - CORS_ALLOWED_ORIGINS
+    - AUTH_BASE_URL
+    - PAYMENTS_BASE_URL
+    - COMMUNITY_BASE_URL
+    - STORAGE_BACKEND
+    - STORAGE_LOCAL_PATH
+    - S3_ENDPOINT
+    - S3_REGION
+    - S3_BUCKET
+    - S3_ACCESS_KEY
+    - S3_SECRET_KEY
+    - RATE_LIMIT_GENERAL_BURST
+    - RATE_LIMIT_GENERAL_REPLENISH_SECS
+    defaults: {}
+  db: mongodb@7
+  network:
+    inbound:
+    - http
+    outbound:
+    - http
+  resources:
+    memory: 256m
+    disk: 512m
+    startup_seconds: 5
+runtime:
+  base: self-contained-static
+  libc: musl
+  dependencies: []
+provenance:
+  source: git@github.com:kelastanpatembok/slides.git
+  commit: e6890e5cbf0f13fa1f63a7b4f11b47d1a5fd080e
+  built_by: eco@0.2.0
+  built_at: 2026-08-12T12:51:21Z
+  target: x86_64-unknown-linux-musl
+release:
+- 1.0.0

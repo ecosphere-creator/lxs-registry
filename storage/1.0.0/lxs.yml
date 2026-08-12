@@ -48,8 +48,8 @@ runtime:
   dependencies:
   - ffmpeg
 provenance:
-  source: git@github.com:kelastanpatembok/storage.git
-  commit: 281406d2946f307cf37b9aed952d1bf277cad4f7
+  source: https://github.com/getecosphere/storage.git
+  commit: 600926e6
   built_by: eco@0.2.0
   built_at: 2026-08-11T23:11:10Z
   target: x86_64-unknown-linux-musl

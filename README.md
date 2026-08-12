@@ -17,6 +17,27 @@ This repository is the **technical distribution layer** of the Ecosphere model:
 A Docker image is a filesystem layer; an LXS is a **single compiled binary** with
 a contract. That binary — not source — is what estates reuse.
 
+## Published LXS — binary → source
+
+Each version's `lxs.yml` records the exact source repo + commit it was built
+from (`provenance.source` / `provenance.commit`), so a binary is fully traceable
+to its code. The source repos are public; the source tag `v<version>` matches
+the published commit.
+
+| LXS | version | status | source |
+| --- | --- | --- | --- |
+| `auth` | 1.0.0 | unverified | [getecosphere/auth](https://github.com/getecosphere/auth) |
+| `storage` | 1.0.0 | unverified | [getecosphere/storage](https://github.com/getecosphere/storage) |
+| `notifications` | 1.0.0 | unverified | [getecosphere/notifications](https://github.com/getecosphere/notifications) |
+| `chat` | 1.0.0 | unverified | [getecosphere/chat](https://github.com/getecosphere/chat) |
+| `email-manager` | 1.0.0 | unverified | [getecosphere/email-manager](https://github.com/getecosphere/email-manager) |
+| `profile` | 1.0.0 | unverified | [getecosphere/profile](https://github.com/getecosphere/profile) |
+| `articles` | 1.0.0 | unverified | [getecosphere/articles](https://github.com/getecosphere/articles) |
+
+**Contributing:** fork a domain repo, improve it, open a PR. On merge, a
+`vX.Y.Z` tag triggers CI to publish the new LXS version. See
+[Contributing LXS](https://eco.stuff8.com/ecosphere/contribute).
+
 ## The canonical pipeline
 
 ```

@@ -43,8 +43,8 @@ runtime:
   libc: musl
   dependencies: []
 provenance:
-  source: git@github.com:kelastanpatembok/email-manager.git
-  commit: b5dbf3b1ed0c6137be91ac9872accc3aefafd10e
+  source: https://github.com/getecosphere/email-manager.git
+  commit: c47935f3
   built_by: eco@0.2.0
   built_at: 2026-08-11T17:35:31Z
   target: x86_64-unknown-linux-musl

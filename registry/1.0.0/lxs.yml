@@ -1,0 +1,47 @@
+name: registry
+domain: registry
+version: 1.0.0
+publisher: getecosphere
+status: unverified
+license: mit
+summary: LXS Registry — browse and categorize versioned Linux Services from the getecosphere/lxs-registry repository
+targets:
+- linux/amd64
+artifacts:
+  linux/amd64:
+    path: linux-amd64/registry
+    sha256: 7a21d78b7ae7166706895100c285e3804fbd84e1af9204b8b93434da64ed940a
+    size: 4597168
+contract:
+  version: 1
+  api: registry REST API (/api/lxs, /api/lxs/categories, /api/lxs/:name)
+  env:
+    required:
+    - SERVER_PORT
+    - LXS_REGISTRY_CACHE
+    optional:
+    - PORT
+    defaults: {}
+  db: none
+  network:
+    inbound:
+    - http
+    outbound:
+    - https
+  resources:
+    memory: 128m
+    disk: 512m
+    startup_seconds: 10
+runtime:
+  base: self-contained-static
+  libc: musl
+  dependencies:
+  - git
+provenance:
+  source: git@github-getecosphere:getecosphere/registry.git
+  commit: 676f7d43d08df974248e0ff762e4eb7bfccd5670
+  built_by: eco@0.2.0
+  built_at: 2026-08-12T11:41:05Z
+  target: x86_64-unknown-linux-musl
+release:
+- 1.0.0

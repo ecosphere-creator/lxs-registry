@@ -1,0 +1,576 @@
+{
+  "openapi": "3.0.3",
+  "info": {
+    "title": "slides",
+    "version": "1.0.1",
+    "description": "Slide-deck (book) CMS: decks, editor prefs, author image/poll-template libraries, poll votes, book sessions, and slide image/narration files. JWT Bearer auth (HS512, issued by auth). Paywall currently disabled (PAYWALL_ACTIVE=false)."
+  },
+  "servers": [
+    { "url": "/api", "description": "All routes are nested under /api" }
+  ],
+  "paths": {
+    "/health": {
+      "get": {
+        "summary": "Liveness probe",
+        "responses": { "200": { "description": "OK", "content": { "application/json": { "schema": { "type": "object", "properties": { "status": { "type": "string", "example": "UP" } } } } } } }
+      }
+    },
+    "/book": {
+      "post": {
+        "summary": "Create a slide deck (ownerId is always the authenticated caller)",
+        "security": [{ "bearerAuth": [] }],
+        "requestBody": { "required": true, "content": { "application/json": { "schema": { "$ref": "#/components/schemas/SlideDeckInput" } } } },
+        "responses": {
+          "201": { "description": "Created", "content": { "application/json": { "schema": { "$ref": "#/components/schemas/SlideDeckDto" } } } },
+          "400": { "$ref": "#/components/responses/Error" },
+          "401": { "$ref": "#/components/responses/Unauthorized" },
+          "403": { "$ref": "#/components/responses/Error" }
+        }
+      }
+    },
+    "/book/catalog": {
+      "get": {
+        "summary": "List published decks for the public catalog",
+        "responses": { "200": { "description": "OK", "content": { "application/json": { "schema": { "type": "array", "items": { "$ref": "#/components/schemas/SlideDeckCatalogItemDto" } } } } } }
+      }
+    },
+    "/book/import": {
+      "post": {
+        "summary": ".ktt archive import (not ported)",
+        "responses": { "501": { "description": "Not Implemented" } }
+      }
+    },
+    "/book/owner/{owner_id}": {
+      "get": {
+        "summary": "List a user's decks (caller must be the owner or platform OWNER)",
+        "security": [{ "bearerAuth": [] }],
+        "parameters": [{ "name": "owner_id", "in": "path", "required": true, "schema": { "type": "string" } }],
+        "responses": {
+          "200": { "description": "OK", "content": { "application/json": { "schema": { "type": "array", "items": { "$ref": "#/components/schemas/SlideDeckDto" } } } } },
+          "403": { "$ref": "#/components/responses/Error" }
+        }
+      }
+    },
+    "/book/event/{event_id}": {
+      "get": {
+        "summary": "List event-linked decks the caller can access",
+        "security": [{ "bearerAuth": [] }],
+        "parameters": [{ "name": "event_id", "in": "path", "required": true, "schema": { "type": "string" } }],
+        "responses": { "200": { "description": "OK", "content": { "application/json": { "schema": { "type": "array", "items": { "$ref": "#/components/schemas/SlideDeckDto" } } } } } }
+      }
+    },
+    "/book/{id_or_slug}/public": {
+      "get": {
+        "summary": "Public deck detail (published only) with curriculum and hasAccess",
+        "security": [{ "bearerAuth": [] }],
+        "parameters": [{ "name": "id_or_slug", "in": "path", "required": true, "schema": { "type": "string" } }],
+        "responses": {
+          "200": { "description": "OK", "content": { "application/json": { "schema": { "$ref": "#/components/schemas/SlideDeckPublicDetailDto" } } } },
+          "404": { "$ref": "#/components/responses/Error" }
+        }
+      }
+    },
+    "/book/{id}/export": {
+      "get": {
+        "summary": ".ktt archive export (not ported)",
+        "responses": { "501": { "description": "Not Implemented" } }
+      }
+    },
+    "/book/{id}": {
+      "get": {
+        "summary": "Fetch a deck (full, or redacted paywall preview when access is denied)",
+        "security": [{ "bearerAuth": [] }],
+        "parameters": [{ "name": "id", "in": "path", "required": true, "schema": { "type": "string" } }],
+        "responses": { "200": { "description": "OK", "content": { "application/json": { "schema": { "$ref": "#/components/schemas/SlideDeckDto" } } } } }
+      },
+      "put": {
+        "summary": "Update a deck (owner or platform OWNER)",
+        "security": [{ "bearerAuth": [] }],
+        "parameters": [{ "name": "id", "in": "path", "required": true, "schema": { "type": "string" } }],
+        "requestBody": { "required": true, "content": { "application/json": { "schema": { "$ref": "#/components/schemas/SlideDeckInput" } } } },
+        "responses": {
+          "200": { "description": "OK", "content": { "application/json": { "schema": { "$ref": "#/components/schemas/SlideDeckDto" } } } },
+          "400": { "$ref": "#/components/responses/Error" },
+          "403": { "$ref": "#/components/responses/Error" }
+        }
+      },
+      "delete": {
+        "summary": "Delete a deck (owner or platform OWNER)",
+        "security": [{ "bearerAuth": [] }],
+        "parameters": [{ "name": "id", "in": "path", "required": true, "schema": { "type": "string" } }],
+        "responses": { "204": { "description": "No Content" }, "403": { "$ref": "#/components/responses/Error" } }
+      }
+    },
+    "/book/{deck_id}/editor-prefs": {
+      "get": {
+        "summary": "Get the caller's editor prefs for a deck",
+        "security": [{ "bearerAuth": [] }],
+        "parameters": [{ "name": "deck_id", "in": "path", "required": true, "schema": { "type": "string" } }],
+        "responses": { "200": { "description": "OK", "content": { "application/json": { "schema": { "$ref": "#/components/schemas/SlideEditorPrefsDto" } } } } }
+      },
+      "put": {
+        "summary": "Upsert the caller's editor prefs (gridDensity normalized, paddings clamped 0-400)",
+        "security": [{ "bearerAuth": [] }],
+        "parameters": [{ "name": "deck_id", "in": "path", "required": true, "schema": { "type": "string" } }],
+        "requestBody": { "required": true, "content": { "application/json": { "schema": { "$ref": "#/components/schemas/UpdateEditorPrefsRequest" } } } },
+        "responses": { "200": { "description": "OK", "content": { "application/json": { "schema": { "$ref": "#/components/schemas/SlideEditorPrefsDto" } } } } }
+      }
+    },
+    "/book/{deck_id}/session": {
+      "get": {
+        "summary": "Get (creating if absent) the book session by userId or anonSessionId",
+        "security": [{ "bearerAuth": [] }],
+        "parameters": [
+          { "name": "deck_id", "in": "path", "required": true, "schema": { "type": "string" } },
+          { "name": "anonSessionId", "in": "query", "required": false, "schema": { "type": "string" } }
+        ],
+        "responses": {
+          "200": { "description": "OK", "content": { "application/json": { "schema": { "$ref": "#/components/schemas/BookSessionDto" } } } },
+          "400": { "$ref": "#/components/responses/Error" }
+        }
+      },
+      "post": {
+        "summary": "Upsert the book session (variables, history, currentSlideId)",
+        "security": [{ "bearerAuth": [] }],
+        "parameters": [
+          { "name": "deck_id", "in": "path", "required": true, "schema": { "type": "string" } },
+          { "name": "anonSessionId", "in": "query", "required": false, "schema": { "type": "string" } }
+        ],
+        "requestBody": { "required": false, "content": { "application/json": { "schema": { "$ref": "#/components/schemas/UpsertSessionRequest" } } } },
+        "responses": {
+          "200": { "description": "OK", "content": { "application/json": { "schema": { "$ref": "#/components/schemas/BookSessionDto" } } } },
+          "400": { "$ref": "#/components/responses/Error" }
+        }
+      }
+    },
+    "/book/{deck_id}/session/merge": {
+      "post": {
+        "summary": "Merge an anonymous session into the caller's user session",
+        "security": [{ "bearerAuth": [] }],
+        "parameters": [{ "name": "deck_id", "in": "path", "required": true, "schema": { "type": "string" } }],
+        "requestBody": { "required": true, "content": { "application/json": { "schema": { "type": "object", "required": ["anonSessionId"], "properties": { "anonSessionId": { "type": "string" } } } } } },
+        "responses": {
+          "200": { "description": "OK", "content": { "application/json": { "schema": { "type": "object", "properties": { "id": { "type": "string" }, "deckId": { "type": "string" }, "userId": { "type": "string" }, "variables": { "type": "object" }, "history": { "type": "array", "items": { "type": "string" } }, "currentSlideId": { "type": "string", "nullable": true } } } } } },
+          "400": { "$ref": "#/components/responses/Error" }
+        }
+      }
+    },
+    "/book/{deck_id}/slides/{slide_id}/elements/{element_id}/poll-votes": {
+      "get": {
+        "summary": "Poll aggregation (anonymous or authenticated)",
+        "security": [{ "bearerAuth": [] }],
+        "parameters": [
+          { "name": "deck_id", "in": "path", "required": true, "schema": { "type": "string" } },
+          { "name": "slide_id", "in": "path", "required": true, "schema": { "type": "string" } },
+          { "name": "element_id", "in": "path", "required": true, "schema": { "type": "string" } }
+        ],
+        "responses": { "200": { "description": "OK", "content": { "application/json": { "schema": { "$ref": "#/components/schemas/PollAggregate" } } } } }
+      },
+      "post": {
+        "summary": "Submit or replace the caller's vote; returns the aggregate",
+        "security": [{ "bearerAuth": [] }],
+        "parameters": [
+          { "name": "deck_id", "in": "path", "required": true, "schema": { "type": "string" } },
+          { "name": "slide_id", "in": "path", "required": true, "schema": { "type": "string" } },
+          { "name": "element_id", "in": "path", "required": true, "schema": { "type": "string" } }
+        ],
+        "requestBody": { "required": true, "content": { "application/json": { "schema": { "type": "object", "properties": { "choiceIds": { "type": "array", "items": { "type": "string" } } } } } } },
+        "responses": { "200": { "description": "OK", "content": { "application/json": { "schema": { "$ref": "#/components/schemas/PollAggregate" } } } } }
+      }
+    },
+    "/author-assets/images": {
+      "get": {
+        "summary": "List the caller's author image-library entries",
+        "security": [{ "bearerAuth": [] }],
+        "responses": { "200": { "description": "OK", "content": { "application/json": { "schema": { "type": "array", "items": { "$ref": "#/components/schemas/AuthorImageAssetDto" } } } } } }
+      },
+      "post": {
+        "summary": "Add (idempotent upsert) an image-library entry",
+        "security": [{ "bearerAuth": [] }],
+        "requestBody": { "required": true, "content": { "application/json": { "schema": { "type": "object", "required": ["fileUrl"], "properties": { "fileUrl": { "type": "string" } } } } } },
+        "responses": { "200": { "description": "OK", "content": { "application/json": { "schema": { "$ref": "#/components/schemas/AuthorImageAssetDto" } } } } }
+      },
+      "delete": {
+        "summary": "Remove an image-library entry by fileUrl",
+        "security": [{ "bearerAuth": [] }],
+        "parameters": [{ "name": "fileUrl", "in": "query", "required": true, "schema": { "type": "string" } }],
+        "responses": { "204": { "description": "No Content" } }
+      }
+    },
+    "/author-assets/images/usage": {
+      "get": {
+        "summary": "Where an image URL is used across the caller's decks",
+        "security": [{ "bearerAuth": [] }],
+        "parameters": [{ "name": "fileUrl", "in": "query", "required": true, "schema": { "type": "string" } }],
+        "responses": { "200": { "description": "OK", "content": { "application/json": { "schema": { "type": "array", "items": { "$ref": "#/components/schemas/UsageItem" } } } } } }
+      }
+    },
+    "/author-poll-templates": {
+      "get": {
+        "summary": "List the caller's poll templates",
+        "security": [{ "bearerAuth": [] }],
+        "responses": { "200": { "description": "OK", "content": { "application/json": { "schema": { "type": "array", "items": { "$ref": "#/components/schemas/AuthorPollTemplateDto" } } } } } }
+      },
+      "post": {
+        "summary": "Create a poll template",
+        "security": [{ "bearerAuth": [] }],
+        "requestBody": { "required": true, "content": { "application/json": { "schema": { "$ref": "#/components/schemas/TemplateBody" } } } },
+        "responses": { "200": { "description": "OK", "content": { "application/json": { "schema": { "$ref": "#/components/schemas/AuthorPollTemplateDto" } } } } }
+      }
+    },
+    "/author-poll-templates/{template_id}": {
+      "put": {
+        "summary": "Update a poll template; optionally re-sync linked poll elements",
+        "security": [{ "bearerAuth": [] }],
+        "parameters": [
+          { "name": "template_id", "in": "path", "required": true, "schema": { "type": "string" } },
+          { "name": "syncLinked", "in": "query", "required": false, "schema": { "type": "boolean", "default": true } }
+        ],
+        "requestBody": { "required": true, "content": { "application/json": { "schema": { "$ref": "#/components/schemas/TemplateBody" } } } },
+        "responses": {
+          "200": { "description": "OK", "content": { "application/json": { "schema": { "$ref": "#/components/schemas/AuthorPollTemplateDto" } } } },
+          "404": { "$ref": "#/components/responses/Error" }
+        }
+      },
+      "delete": {
+        "summary": "Delete a poll template",
+        "security": [{ "bearerAuth": [] }],
+        "parameters": [{ "name": "template_id", "in": "path", "required": true, "schema": { "type": "string" } }],
+        "responses": { "204": { "description": "No Content" } }
+      }
+    },
+    "/author-poll-templates/{template_id}/usage": {
+      "get": {
+        "summary": "Where a poll template is referenced across the caller's decks",
+        "security": [{ "bearerAuth": [] }],
+        "parameters": [{ "name": "template_id", "in": "path", "required": true, "schema": { "type": "string" } }],
+        "responses": { "200": { "description": "OK", "content": { "application/json": { "schema": { "type": "array", "items": { "$ref": "#/components/schemas/UsageItem" } } } } } }
+      }
+    },
+    "/author-poll-templates/{template_id}/sync": {
+      "post": {
+        "summary": "Push a template's pollStyleJson into every linked poll element",
+        "security": [{ "bearerAuth": [] }],
+        "parameters": [{ "name": "template_id", "in": "path", "required": true, "schema": { "type": "string" } }],
+        "responses": { "200": { "description": "OK", "content": { "application/json": { "schema": { "type": "object", "properties": { "updatedElements": { "type": "integer" } } } } } } }
+      }
+    },
+    "/files/upload": { "$ref": "#/paths/~1slides-files~1upload" },
+    "/files/view/{file_id}": {
+      "get": {
+        "summary": "Serve an uploaded file's bytes (public; alias /slides-files/view/:file_id)",
+        "parameters": [{ "name": "file_id", "in": "path", "required": true, "schema": { "type": "string" } }],
+        "responses": {
+          "200": { "description": "OK", "content": { "application/octet-stream": { "schema": { "type": "string", "format": "binary" } } } },
+          "404": { "$ref": "#/components/responses/Error" }
+        }
+      }
+    },
+    "/files/{file_id}": {
+      "delete": {
+        "summary": "Delete an uploaded file (uploader only; alias /slides-files/:file_id)",
+        "security": [{ "bearerAuth": [] }],
+        "parameters": [{ "name": "file_id", "in": "path", "required": true, "schema": { "type": "string" } }],
+        "responses": { "204": { "description": "No Content" }, "403": { "$ref": "#/components/responses/Error" } }
+      }
+    },
+    "/slides-files/upload": {
+      "post": {
+        "summary": "Upload a slide image or guided-narration audio (multipart; gateway-routable alias of /files/upload)",
+        "security": [{ "bearerAuth": [] }],
+        "requestBody": { "required": true, "content": { "multipart/form-data": { "schema": { "type": "object", "required": ["file"], "properties": { "file": { "type": "string", "format": "binary" }, "type": { "type": "string", "description": "slide-narration for raw audio; anything else treated as an image (re-encoded to WebP)" } } } } } },
+        "responses": {
+          "201": { "description": "Created", "content": { "application/json": { "schema": { "type": "object", "properties": { "fileUrl": { "type": "string" }, "fileId": { "type": "string" } } } } } },
+          "400": { "$ref": "#/components/responses/Error" }
+        }
+      }
+    },
+    "/slides-files/view/{file_id}": { "$ref": "#/paths/~1files~1view~1{file_id}" },
+    "/slides-files/{file_id}": { "$ref": "#/paths/~1files~1{file_id}" }
+  },
+  "components": {
+    "securitySchemes": { "bearerAuth": { "type": "http", "scheme": "bearer" } },
+    "responses": {
+      "Unauthorized": { "description": "Missing or invalid Bearer token", "content": { "application/json": { "schema": { "type": "object", "properties": { "error": { "type": "string" }, "message": { "type": "string" } } } } } },
+      "Error": { "description": "AppError body", "content": { "application/json": { "schema": { "$ref": "#/components/schemas/AppError" } } } }
+    },
+    "schemas": {
+      "AppError": {
+        "type": "object",
+        "properties": {
+          "code": { "type": "string", "enum": ["VALIDATION_ERROR", "RESOURCE_NOT_FOUND", "INVALID_ARGUMENT", "ACCESS_DENIED", "ALREADY_EXISTS", "INTERNAL_SERVER_ERROR"] },
+          "message": { "type": "string" },
+          "details": { "type": "object", "additionalProperties": { "type": "string" } },
+          "timestamp": { "type": "string", "format": "date-time" }
+        }
+      },
+      "SlideDeckInput": {
+        "type": "object",
+        "properties": {
+          "name": { "type": "string", "nullable": true },
+          "slug": { "type": "string", "nullable": true },
+          "subtitle": { "type": "string", "nullable": true },
+          "coverUrl": { "type": "string", "nullable": true },
+          "description": { "type": "string", "nullable": true },
+          "longSummary": { "type": "string", "nullable": true },
+          "learningObjectives": { "type": "array", "items": { "type": "string" } },
+          "requirements": { "type": "array", "items": { "type": "string" } },
+          "targetAudience": { "type": "array", "items": { "type": "string" } },
+          "tags": { "type": "array", "items": { "type": "string" } },
+          "level": { "type": "string", "nullable": true },
+          "language": { "type": "string", "nullable": true },
+          "instructorName": { "type": "string", "nullable": true },
+          "estimatedDurationMinutes": { "type": "integer", "nullable": true },
+          "status": { "type": "string", "enum": ["draft", "published"], "default": "draft" },
+          "communityId": { "type": "string", "nullable": true },
+          "eventId": { "type": "string", "nullable": true },
+          "theme": { "type": "string", "nullable": true },
+          "transition": { "type": "string", "nullable": true },
+          "layoutFormat": { "type": "string", "nullable": true },
+          "price": { "type": "number", "nullable": true },
+          "compareAtPrice": { "type": "number", "nullable": true },
+          "paywallStartSlideIndex": { "type": "integer", "nullable": true },
+          "slides": { "type": "array", "items": { "$ref": "#/components/schemas/Slide" } },
+          "flow": { "$ref": "#/components/schemas/Flow" },
+          "galleryImages": { "type": "array", "items": { "type": "string" } },
+          "guidedAudioLibrary": { "type": "array", "items": { "$ref": "#/components/schemas/GuidedAudioAsset" } }
+        }
+      },
+      "SlideDeckDto": {
+        "type": "object",
+        "required": ["id", "status", "ownerId", "slides", "galleryImages", "guidedAudioLibrary", "createdAt", "updatedAt"],
+        "properties": {
+          "id": { "type": "string" },
+          "name": { "type": "string", "nullable": true },
+          "slug": { "type": "string", "nullable": true },
+          "subtitle": { "type": "string", "nullable": true },
+          "coverUrl": { "type": "string", "nullable": true },
+          "description": { "type": "string", "nullable": true },
+          "longSummary": { "type": "string", "nullable": true },
+          "learningObjectives": { "type": "array", "items": { "type": "string" } },
+          "requirements": { "type": "array", "items": { "type": "string" } },
+          "targetAudience": { "type": "array", "items": { "type": "string" } },
+          "tags": { "type": "array", "items": { "type": "string" } },
+          "level": { "type": "string", "nullable": true },
+          "language": { "type": "string", "nullable": true },
+          "instructorName": { "type": "string", "nullable": true },
+          "estimatedDurationMinutes": { "type": "integer", "nullable": true },
+          "status": { "type": "string" },
+          "ownerId": { "type": "string" },
+          "communityId": { "type": "string", "nullable": true },
+          "eventId": { "type": "string", "nullable": true },
+          "theme": { "type": "string", "nullable": true },
+          "transition": { "type": "string", "nullable": true },
+          "layoutFormat": { "type": "string", "nullable": true },
+          "price": { "type": "number", "nullable": true },
+          "compareAtPrice": { "type": "number", "nullable": true },
+          "paywallStartSlideIndex": { "type": "integer", "nullable": true },
+          "slides": { "type": "array", "items": { "$ref": "#/components/schemas/Slide" } },
+          "flow": { "$ref": "#/components/schemas/Flow" },
+          "galleryImages": { "type": "array", "items": { "type": "string" } },
+          "guidedAudioLibrary": { "type": "array", "items": { "$ref": "#/components/schemas/GuidedAudioAsset" } },
+          "createdAt": { "type": "string", "format": "date-time" },
+          "updatedAt": { "type": "string", "format": "date-time" }
+        }
+      },
+      "Slide": {
+        "type": "object",
+        "required": ["id"],
+        "properties": {
+          "id": { "type": "string" },
+          "name": { "type": "string", "nullable": true },
+          "elements": { "type": "array", "items": { "$ref": "#/components/schemas/Element" } },
+          "background": { "type": "string", "nullable": true },
+          "level": { "type": "integer", "nullable": true },
+          "progressiveReveal": { "type": "boolean", "nullable": true },
+          "revealOrder": { "type": "array", "items": { "type": "string" }, "nullable": true },
+          "guidedReveal": { "$ref": "#/components/schemas/GuidedReveal" },
+          "rpp": { "type": "object", "nullable": true }
+        }
+      },
+      "Element": {
+        "type": "object",
+        "required": ["id"],
+        "properties": {
+          "id": { "type": "string" },
+          "type": { "type": "string", "enum": ["text", "image", "link", "paragraph", "poll", "callout", "input", "choice"], "nullable": true },
+          "x": { "type": "number", "default": 0 },
+          "y": { "type": "number", "default": 0 },
+          "width": { "type": "number", "default": 0 },
+          "height": { "type": "number", "default": 0 },
+          "content": { "type": "string", "nullable": true },
+          "label": { "type": "string", "nullable": true },
+          "style": { "type": "string", "nullable": true, "description": "JSON string; carries pollTemplateId for linked polls" },
+          "linkUrl": { "type": "string", "nullable": true },
+          "flipH": { "type": "boolean", "nullable": true },
+          "flipV": { "type": "boolean", "nullable": true }
+        }
+      },
+      "Flow": {
+        "type": "object",
+        "properties": {
+          "startSlideId": { "type": "string", "nullable": true },
+          "edges": { "type": "array", "items": { "$ref": "#/components/schemas/FlowEdge" } },
+          "nodePositions": { "type": "object", "nullable": true },
+          "layoutMode": { "type": "string", "nullable": true },
+          "editorState": { "type": "object", "nullable": true }
+        }
+      },
+      "FlowEdge": {
+        "type": "object",
+        "properties": {
+          "fromSlideId": { "type": "string", "nullable": true },
+          "toSlideId": { "type": "string", "nullable": true },
+          "condition": { "type": "object" },
+          "label": { "type": "string", "nullable": true },
+          "priority": { "type": "integer", "nullable": true }
+        }
+      },
+      "GuidedReveal": {
+        "type": "object",
+        "properties": {
+          "enabled": { "type": "boolean", "nullable": true },
+          "audioFileId": { "type": "string", "nullable": true },
+          "durationMs": { "type": "integer", "nullable": true },
+          "cues": { "type": "array", "items": { "type": "object", "properties": { "elementId": { "type": "string" }, "atMs": { "type": "integer" } } } },
+          "recordedAt": { "type": "string", "nullable": true },
+          "codec": { "type": "string", "nullable": true }
+        }
+      },
+      "GuidedAudioAsset": { "type": "object", "required": ["fileId"], "properties": { "fileId": { "type": "string" }, "name": { "type": "string", "nullable": true } } },
+      "SlideDeckCatalogItemDto": {
+        "type": "object",
+        "required": ["id", "slideCount", "tags", "updatedAt"],
+        "properties": {
+          "id": { "type": "string" },
+          "slug": { "type": "string", "nullable": true },
+          "name": { "type": "string", "nullable": true },
+          "subtitle": { "type": "string", "nullable": true },
+          "coverUrl": { "type": "string", "nullable": true },
+          "description": { "type": "string", "nullable": true },
+          "level": { "type": "string", "nullable": true },
+          "language": { "type": "string", "nullable": true },
+          "instructorName": { "type": "string", "nullable": true },
+          "price": { "type": "number", "nullable": true },
+          "compareAtPrice": { "type": "number", "nullable": true },
+          "estimatedDurationMinutes": { "type": "integer", "nullable": true },
+          "slideCount": { "type": "integer" },
+          "tags": { "type": "array", "items": { "type": "string" } },
+          "updatedAt": { "type": "string", "format": "date-time" }
+        }
+      },
+      "SlideDeckPublicDetailDto": {
+        "type": "object",
+        "required": ["id", "slideCount", "hasAccess", "curriculum", "updatedAt"],
+        "properties": {
+          "id": { "type": "string" },
+          "slug": { "type": "string", "nullable": true },
+          "name": { "type": "string", "nullable": true },
+          "subtitle": { "type": "string", "nullable": true },
+          "coverUrl": { "type": "string", "nullable": true },
+          "description": { "type": "string", "nullable": true },
+          "longSummary": { "type": "string", "nullable": true },
+          "learningObjectives": { "type": "array", "items": { "type": "string" } },
+          "requirements": { "type": "array", "items": { "type": "string" } },
+          "targetAudience": { "type": "array", "items": { "type": "string" } },
+          "tags": { "type": "array", "items": { "type": "string" } },
+          "level": { "type": "string", "nullable": true },
+          "language": { "type": "string", "nullable": true },
+          "instructorName": { "type": "string", "nullable": true },
+          "price": { "type": "number", "nullable": true },
+          "compareAtPrice": { "type": "number", "nullable": true },
+          "estimatedDurationMinutes": { "type": "integer", "nullable": true },
+          "slideCount": { "type": "integer" },
+          "paywallStartSlideIndex": { "type": "integer", "nullable": true },
+          "hasAccess": { "type": "boolean" },
+          "curriculum": { "type": "array", "items": { "$ref": "#/components/schemas/CurriculumItemDto" } },
+          "updatedAt": { "type": "string", "format": "date-time" }
+        }
+      },
+      "CurriculumItemDto": { "type": "object", "properties": { "index": { "type": "integer" }, "title": { "type": "string" }, "level": { "type": "integer" }, "locked": { "type": "boolean" } } },
+      "SlideEditorPrefsDto": {
+        "type": "object",
+        "properties": {
+          "deckId": { "type": "string" },
+          "userId": { "type": "string" },
+          "showGrid": { "type": "boolean" },
+          "gridDensity": { "type": "string", "enum": ["coarse", "medium", "fine"] },
+          "showPaddingGuides": { "type": "boolean" },
+          "snapToGrid": { "type": "boolean" },
+          "paddingTop": { "type": "integer" },
+          "paddingRight": { "type": "integer" },
+          "paddingBottom": { "type": "integer" },
+          "paddingLeft": { "type": "integer" },
+          "createdAt": { "type": "string", "format": "date-time" },
+          "updatedAt": { "type": "string", "format": "date-time" }
+        }
+      },
+      "UpdateEditorPrefsRequest": {
+        "type": "object",
+        "properties": {
+          "showGrid": { "type": "boolean" },
+          "gridDensity": { "type": "string", "nullable": true },
+          "showPaddingGuides": { "type": "boolean" },
+          "snapToGrid": { "type": "boolean" },
+          "paddingTop": { "type": "integer" },
+          "paddingRight": { "type": "integer" },
+          "paddingBottom": { "type": "integer" },
+          "paddingLeft": { "type": "integer" }
+        }
+      },
+      "BookSessionDto": {
+        "type": "object",
+        "properties": {
+          "id": { "type": "string" },
+          "deckId": { "type": "string" },
+          "userId": { "type": "string", "nullable": true },
+          "anonSessionId": { "type": "string", "nullable": true },
+          "variables": { "type": "object" },
+          "history": { "type": "array", "items": { "type": "string" } },
+          "currentSlideId": { "type": "string", "nullable": true },
+          "createdAt": { "type": "string", "format": "date-time" },
+          "updatedAt": { "type": "string", "format": "date-time" }
+        }
+      },
+      "UpsertSessionRequest": {
+        "type": "object",
+        "properties": {
+          "variables": { "type": "object" },
+          "history": { "type": "array", "items": { "type": "string" } },
+          "currentSlideId": { "type": "string" }
+        }
+      },
+      "PollAggregate": {
+        "type": "object",
+        "properties": {
+          "totalVoters": { "type": "integer" },
+          "countsByChoiceId": { "type": "object", "additionalProperties": { "type": "integer" } },
+          "myChoiceIds": { "type": "array", "items": { "type": "string" } }
+        }
+      },
+      "AuthorImageAssetDto": {
+        "type": "object",
+        "properties": {
+          "id": { "type": "string" },
+          "ownerId": { "type": "string" },
+          "fileUrl": { "type": "string" },
+          "createdAt": { "type": "string", "format": "date-time" },
+          "updatedAt": { "type": "string", "format": "date-time" }
+        }
+      },
+      "AuthorPollTemplateDto": {
+        "type": "object",
+        "properties": {
+          "id": { "type": "string" },
+          "ownerId": { "type": "string" },
+          "title": { "type": "string" },
+          "pollStyleJson": { "type": "string", "nullable": true },
+          "createdAt": { "type": "string", "format": "date-time" },
+          "updatedAt": { "type": "string", "format": "date-time" }
+        }
+      },
+      "TemplateBody": { "type": "object", "properties": { "title": { "type": "string", "nullable": true }, "pollStyleJson": { "type": "string", "nullable": true } } },
+      "UsageItem": { "type": "object", "properties": { "deckId": { "type": "string" }, "deckName": { "type": "string", "nullable": true }, "slideId": { "type": "string" }, "slideIndex": { "type": "integer" }, "elementId": { "type": "string" } } }
+    }
+  }
+}

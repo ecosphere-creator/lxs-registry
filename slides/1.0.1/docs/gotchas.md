@@ -1,7 +1,7 @@
 # Gotchas
 
 Production constraints that are NOT visible in the binary — from code comments
-and `CLAUDE.md`.
+and `README.md`.
 
 - **Paywall is disabled.** `PAYWALL_ACTIVE = false` in
   `handlers/slide_decks.rs` makes `can_access` short-circuit to `true`: every
@@ -60,7 +60,7 @@ and `CLAUDE.md`.
   built that way.
 - **The frontend (Leptos) is external.** This LXS repo ships the backend and
   the shared-secret consumer contract only; the Leptos frontend referenced in
-  `CLAUDE.md` lives elsewhere and must be composed separately.
+  `README.md` lives elsewhere and must be composed separately.
 - **Logs are structured JSON** with a per-request `x-request-id` (reused from
   the incoming header, echoed back, and forwarded to auth/payments/community).
   Set `RUST_LOG` (default `info`) to tune verbosity.

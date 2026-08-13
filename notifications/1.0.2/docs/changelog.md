@@ -1,6 +1,6 @@
 # Changelog
 
-Versions tracked from `git log`, the domain CLAUDE.md, and the registry
+Versions tracked from `git log`, the domain README.md, and the registry
 manifest (`lxs.yml`). The manifest's `release:` list is empty and no git tags
 exist, so only versions explicitly recorded are listed; 1.0.1 has no record.
 

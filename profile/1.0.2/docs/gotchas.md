@@ -1,7 +1,7 @@
 # Gotchas
 
 Production constraints that are NOT visible in the binary. Source: code
-comments across `backend/src/**` and the domain CLAUDE.md.
+comments across `backend/src/**` and the domain README.md.
 
 - **Reads fail closed when `auth` is down.** Every `GET /users/{id}` and
   `GET /users/username/{x}` calls `sync_from_auth` first

@@ -1,7 +1,7 @@
 # Gotchas
 
 Production constraints that are NOT visible in the binary — from code comments
-and `CLAUDE.md`.
+and `README.md`.
 
 - **`ffmpeg` is a runtime dependency, not a Cargo dep.** Video uploads run
   `ffmpeg` via `Command::new("ffmpeg")`. If it's missing, the upload fails
@@ -27,7 +27,7 @@ and `CLAUDE.md`.
 - **ffmpeg timeout is 300s, not 120s.** The current code
   (`run_ffmpeg` in `lib.rs`) kills the child after `Duration::from_secs(300)`
   → `408 Video processing timed out. Try a shorter or smaller video.`
-  `CLAUDE.md` still says 120s — the 120s value was raised to 300s in commit
+  `README.md` still says 120s — the 120s value was raised to 300s in commit
   `23ab1d9` (veryfast preset + all cores). Trust 300s.
 - **Body-limit layers must cover the largest kind.** The `RequestBodyLimitLayer`
   and `DefaultBodyLimit` are both set from `max_body_bytes()` =

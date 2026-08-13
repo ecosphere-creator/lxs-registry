@@ -1,9 +1,9 @@
 # Gotchas
 
 Production constraints that are NOT visible in the binary. Source: code
-comments in `backend/src/lib.rs`, `main.rs`, `.env.example`, and CLAUDE.md.
+comments in `backend/src/lib.rs`, `main.rs`, `.env.example`, and README.md.
 
-- **CLAUDE.md says Go; the code is Rust.** CLAUDE.md still describes
+- **README.md says Go; the code is Rust.** README.md still describes
   `backend/` as "Go 1.19 with MongoDB". It was rewritten to Rust (axum 0.7 +
   tokio + mongodb) in commit `816bdbd`. Trust the Rust source, not the doc.
 - **`CORS_ALLOWED_ORIGINS`, `API_BASE_PATH`, `AUTH_BASE_URL` are declared but

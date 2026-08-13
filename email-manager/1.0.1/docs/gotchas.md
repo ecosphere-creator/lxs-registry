@@ -12,7 +12,7 @@ Production-learned constraints not visible in the binary:
   (default 5) increments a `recipient-day-<email>` counter after each send, but
   the worker never consults it to skip a recipient — only the **global hourly
   budget** gates sending (`EMAIL_GLOBAL_PER_HOUR`, default 400, ramped by
-  warm-up). CLAUDE.md advertises a per-recipient/day default of 5; the code
+  warm-up). README.md advertises a per-recipient/day default of 5; the code
   only records it.
 - **Warm-up ramp is calendar-based, not per-domain.** `warmup_rate` uses the
   day-of-year (`now.ordinal() % warmup_days`) — a new verified domain ramps

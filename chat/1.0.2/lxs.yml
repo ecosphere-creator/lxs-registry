@@ -1,0 +1,60 @@
+name: chat
+domain: chat
+version: 1.0.2
+publisher: stuff8
+status: unverified
+license: mit
+summary: 'Chat: realtime messaging via WebSocket, presence, Redis pub/sub'
+targets:
+- linux/amd64
+artifacts:
+  linux/amd64:
+    path: linux-amd64/chat
+    sha256: f07049192416693942d255fdd5b961bd0c28170014d33bcba432e166dfd6448b
+    size: 14852160
+contract:
+  version: 1
+  api: chat REST + WebSocket API (rooms, messages, presence)
+  env:
+    required:
+    - SERVER_PORT
+    - API_BASE_PATH
+    - MONGODB_URI
+    - REDIS_URL
+    - JWT_SECRET
+    optional:
+    - STORAGE_API_URL
+    - NOTIFICATIONS_API_URL
+    - CORS_ALLOWED_ORIGINS
+    defaults: {}
+  db: mongodb@7
+  network:
+    inbound:
+    - http
+    - ws
+    outbound:
+    - http
+  resources:
+    memory: 192m
+    disk: 256m
+    startup_seconds: 5
+runtime:
+  base: self-contained-static
+  libc: musl
+  dependencies:
+  - redis
+provenance:
+  source: git@github.com:kelastanpatembok/chat.git
+  commit: 31dc6c141b72c6cbd35da44955fad0d0b2a3ffe3
+  built_by: eco@0.2.0
+  built_at: 2026-08-13T00:57:29Z
+  target: x86_64-unknown-linux-musl
+release:
+- 1.0.2
+docs:
+- README.md
+- api.md
+- changelog.md
+- examples.sh
+- gotchas.md
+- openapi.json

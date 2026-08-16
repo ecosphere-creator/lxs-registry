@@ -9,7 +9,15 @@ summary: "User profiles: bio, experience, education, skills, certifications, lin
 targets:
   - linux/amd64
 
-artifacts: {}
+artifacts:
+  linux/amd64:
+    path: linux-amd64/profile
+    sha256: 080cd533aa51da0b7a2600b1c3e24cc10700c2844b2e9970e9891f1f7a939fa0
+    size: 14199832
+  darwin/aarch64:
+    path: darwin-aarch64/profile
+    sha256: 3978ed9a8f3f49c1dfbcbaae5ba61cbbc4d5d25e21b0036e939233d4245d6f04
+    size: 14356032
 
 contract:
   version: 1

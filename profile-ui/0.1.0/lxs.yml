@@ -12,12 +12,12 @@ targets:
 artifacts:
   linux/amd64:
     path: linux-amd64/profile-ui
-    sha256: fb17ecd84c9d085a580a9525f539d194fdd62706c2ed058f40b6d497ba6fdbd0
-    size: 1279296
+    sha256: 4f89c0afe4cd92b8e73c6f156652170a4d5f95360e741f8fdf634edc775e18a4
+    size: 1279344
   darwin/aarch64:
     path: darwin-aarch64/profile-ui
-    sha256: 946a118443444be5a8b7c9cc9aa604cd59ac472c70e8de4f69d5c4b079f19faa
-    size: 1116368
+    sha256: b016a990cf711462735a3b8f1bcf182d5667408a8163d6bfd5258343612f27a6
+    size: 1116384
 
 contract:
   version: 1

@@ -14,8 +14,8 @@ targets:
 artifacts:
   linux/amd64:
     path: linux-amd64/auth-ui
-    sha256: 2f6c9625fc52954e5f1cf8a4db9c3979895a3eb33038c04af13945f30fd7e7df
-    size: 1301752
+    sha256: ffc6435f6d344505ad47c9843e39d75038513424326dad6817279b8d3f5d3d20
+    size: 1313600
   darwin/aarch64:
     path: darwin-aarch64/auth-ui
     sha256: 5c034bfbd1b8350708c87b1c04add5622c27f91bc67c47c123de74070e4a595c

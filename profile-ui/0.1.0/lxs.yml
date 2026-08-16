@@ -9,7 +9,15 @@ summary: "White-label profile edit page (name, avatar, cover) for the profile do
 targets:
   - linux/amd64
 
-artifacts: {}
+artifacts:
+  linux/amd64:
+    path: linux-amd64/profile-ui
+    sha256: ae4cc676ce2707a9b37078872e0f41005539f014621cf6d0ef25034d792532d2
+    size: 1279360
+  darwin/aarch64:
+    path: darwin-aarch64/profile-ui
+    sha256: 946a118443444be5a8b7c9cc9aa604cd59ac472c70e8de4f69d5c4b079f19faa
+    size: 1116368
 
 contract:
   version: 1

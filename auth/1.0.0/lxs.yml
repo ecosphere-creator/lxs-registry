@@ -8,11 +8,16 @@ summary: 'Authentication: login, register, JWT, email verification, avatars'
 category: Identity
 targets:
 - linux/amd64
+- darwin/aarch64
 artifacts:
   linux/amd64:
     path: linux-amd64/auth
     sha256: 64a6aa03df0fe8c2881e60037b75f72f4f76a47e5fc0c9b49147db4dcec103ef
     size: 26166624
+  darwin/aarch64:
+    path: darwin-aarch64/auth
+    sha256: 27780adca9e485235645e40229e43c064db21d2f99c2d9edcb3b4199bce6fd81
+    size: 23431088
 contract:
   version: 1
   api: auth REST API

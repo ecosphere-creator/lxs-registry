@@ -1,0 +1,80 @@
+name: email-manager
+domain: email-manager
+version: 1.1.0
+publisher: stuff8
+status: unverified
+license: mit
+summary: 'Email: transactional delivery via Brevo, templates, rate limits, warmup'
+targets:
+- darwin/amd64
+- darwin/arm64
+- linux/amd64
+- linux/arm64
+- windows/amd64
+artifacts:
+  linux/arm64:
+    path: linux-arm64/email-manager
+    sha256: 974bbd8cbe082e6bf84f96f025f32a991c6e671a6437748bd6ceb706fabface9
+    size: 11684952
+  darwin/arm64:
+    path: darwin-arm64/email-manager
+    sha256: 41cc88b538e9ec5a6a89190f5e430812a278eeff1c923236479847ae905bedea
+    size: 15296960
+  darwin/amd64:
+    path: darwin-amd64/email-manager
+    sha256: 61a2ee1968d9a99c5a3b219165dda11986b5c85997e781ef6d6c45a685272b38
+    size: 15860884
+  linux/amd64:
+    path: linux-amd64/email-manager
+    sha256: 11529568d9830f101cbd92bf21fd29dc3a71724d35f4bf6d13d0636a8200ac20
+    size: 12973384
+  windows/amd64:
+    path: windows-amd64/email-manager.exe
+    sha256: 9be7d62edee207b3ead9343a564a24a0303a658502789e965c75d48aa88850a8
+    size: 18392576
+contract:
+  version: 1
+  api: email-manager REST API (send + templates + logs)
+  env:
+    required:
+    - SERVER_PORT
+    - API_BASE_PATH
+    - MONGODB_URI
+    - BREVO_API_KEY
+    - MAIL_FROM_EMAIL
+    - MAIL_FROM_NAME
+    optional:
+    - EMAIL_PER_RECIPIENT_DAY
+    - EMAIL_GLOBAL_PER_HOUR
+    - EMAIL_WARMUP_MAX_PER_HOUR
+    - EMAIL_WARMUP_DAYS
+    defaults: {}
+  db: mongodb@7
+  network:
+    inbound:
+    - http
+    outbound:
+    - https
+  resources:
+    memory: 128m
+    disk: 256m
+    startup_seconds: 5
+runtime:
+  base: self-contained-static
+  libc: musl
+  dependencies: []
+provenance:
+  source: github-getecosphere:getecosphere/email-manager.git
+  commit: fd5fce30e2bafd32ef566c75ed19942b9ced9851
+  built_by: eco@0.3.9
+  built_at: 2026-08-17T09:10:45Z
+  target: x86_64-unknown-linux-musl
+release:
+- 1.1.0
+docs:
+- README.md
+- api.md
+- changelog.md
+- examples.sh
+- gotchas.md
+- openapi.json

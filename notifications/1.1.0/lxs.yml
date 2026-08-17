@@ -1,0 +1,74 @@
+name: notifications
+domain: notifications
+version: 1.1.0
+publisher: stuff8
+status: unverified
+license: mit
+summary: 'Notifications: in-app + email delivery, per-tenant channels, WebSocket push'
+targets:
+- darwin/amd64
+- darwin/arm64
+- linux/amd64
+- linux/arm64
+artifacts:
+  linux/amd64:
+    path: linux-amd64/notifications
+    sha256: 97abf92a153c3e00bf9273d0899c046ca290554326f0ef0acdbb05f21c64e838
+    size: 13399400
+  darwin/arm64:
+    path: darwin-arm64/notifications
+    sha256: c3d00c15024c56624a5e8d0a40f8e2a03e0ccef278ddea28e5f40d66f69b4edf
+    size: 15910256
+  darwin/amd64:
+    path: darwin-amd64/notifications
+    sha256: bf4d30aec49ddce6ca5c7ee8a295ff009f7c67a7b392203e4544a6c22dd19742
+    size: 16511612
+  linux/arm64:
+    path: linux-arm64/notifications
+    sha256: 9edeca515c2bedd92e7e5df3ba1457845fbe722c6b2942a1e2d38bda7855d8ca
+    size: 12053744
+contract:
+  version: 2
+  api: notifications REST API (ingest + list + read + ws + Android FCM device registration)
+  env:
+    required:
+    - PORT
+    - API_BASE_PATH
+    - MONGODB_URI
+    - JWT_SECRET
+    optional:
+    - CORS_ALLOWED_ORIGINS
+    - AUTH_BASE_URL
+    - FCM_SERVICE_ACCOUNT
+    - GOOGLE_APPLICATION_CREDENTIALS
+    defaults: {}
+  db: mongodb@7
+  network:
+    inbound:
+    - http
+    outbound:
+    - http
+    - https
+  resources:
+    memory: 128m
+    disk: 256m
+    startup_seconds: 5
+runtime:
+  base: self-contained-static
+  libc: musl
+  dependencies: []
+provenance:
+  source: github-getecosphere:getecosphere/notifications.git
+  commit: fca477996fa6b5c89e8f7d244dbf183de115a27d
+  built_by: eco@0.3.9
+  built_at: 2026-08-17T10:09:24Z
+  target: x86_64-unknown-linux-musl
+release:
+- 1.1.0
+docs:
+- README.md
+- api.md
+- changelog.md
+- examples.sh
+- gotchas.md
+- openapi.json

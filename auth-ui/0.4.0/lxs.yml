@@ -1,0 +1,56 @@
+name: auth-ui
+domain: auth
+version: 0.4.0
+publisher: stuff8
+status: unverified
+license: mit
+summary: White-label signin/signup pages for the auth domain (Leptos SSR)
+targets:
+- darwin/arm64
+- linux/amd64
+artifacts:
+  darwin/arm64:
+    path: darwin-arm64/auth-ui
+    sha256: 84f827fe80597804b21a222b3482e8c0233ae5e734f879c27bce5bc6d18c40ae
+    size: 2298608
+  linux/amd64:
+    path: linux-amd64/auth-ui
+    sha256: 2081215a1865d8ff3fa0666cb6cf7a732439e762b7805ff8d65ee9aac08b659a
+    size: 1697904
+contract:
+  version: 1
+  api: 'auth-ui pages: GET /signin, GET /signup'
+  env:
+    required:
+    - SERVER_PORT
+    optional:
+    - AUTH_API_BASE
+    - AUTH_REDIRECT_URL
+    defaults: {}
+  db: none
+  network:
+    inbound:
+    - http
+    outbound:
+    - http
+  resources:
+    memory: 32m
+    disk: 32m
+    startup_seconds: 5
+runtime:
+  base: self-contained-static
+  libc: musl
+  dependencies: []
+provenance:
+  source: ''
+  commit: e59ab528750945655d0c6e9ea6fcb5db0a3967d0
+  built_by: eco@0.3.9
+  built_at: 2026-08-17T17:35:17Z
+  target: x86_64-unknown-linux-musl
+release:
+- 0.4.0
+docs:
+- README.md
+- api.md
+- changelog.md
+- gotchas.md

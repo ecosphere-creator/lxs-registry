@@ -1,0 +1,71 @@
+name: auth-ui
+domain: auth
+version: 0.2.0
+publisher: stuff8
+status: unverified
+license: mit
+summary: White-label signin/signup pages for the auth domain (Leptos SSR)
+targets:
+- darwin/amd64
+- darwin/arm64
+- linux/amd64
+- linux/arm64
+- windows/amd64
+artifacts:
+  linux/amd64:
+    path: linux-amd64/auth-ui
+    sha256: e46b92b96eff7bed821362527c51f70a3ffb103a154123b68f9e5b9da2f3b8c3
+    size: 1699544
+  darwin/amd64:
+    path: darwin-amd64/auth-ui
+    sha256: d580d3fcd8726ac31e671c0d118678cb86cbd724fcd665e8271c81838bc826e7
+    size: 2246984
+  windows/amd64:
+    path: windows-amd64/auth-ui.exe
+    sha256: b64d7f726739e3ffcbdc2838b1e3316e0015a3a996c3290f2b40b9edfe1fece5
+    size: 4997632
+  linux/arm64:
+    path: linux-arm64/auth-ui
+    sha256: 3cb6daae98f0905d378135bbe4553b9833148dae893b6dc5f57c64daf2da6190
+    size: 1679872
+  darwin/arm64:
+    path: darwin-arm64/auth-ui
+    sha256: 84fe8a5feb45bdd5401d0d366f358c40f48e633b1c180fad80135c69e2abe8a1
+    size: 2298560
+contract:
+  version: 1
+  api: 'auth-ui pages: GET /signin, GET /signup'
+  env:
+    required:
+    - SERVER_PORT
+    optional:
+    - AUTH_API_BASE
+    - AUTH_REDIRECT_URL
+    defaults: {}
+  db: none
+  network:
+    inbound:
+    - http
+    outbound:
+    - http
+  resources:
+    memory: 32m
+    disk: 32m
+    startup_seconds: 5
+runtime:
+  base: self-contained-static
+  libc: musl
+  dependencies: []
+provenance:
+  source: ''
+  commit: 5acb076f2036d400a765662d3858c832e7e62f8f
+  built_by: eco@0.3.9
+  built_at: 2026-08-17T08:47:31Z
+  target: x86_64-unknown-linux-musl
+release:
+- 0.2.0
+docs:
+- README.md
+- api.md
+- changelog.md
+- gotchas.md

@@ -1,0 +1,73 @@
+name: articles
+domain: articles
+version: 1.1.0
+publisher: stuff8
+status: unverified
+license: mit
+summary: 'Articles & content: CRUD, categories, search, admin publishing workflow'
+targets:
+- darwin/amd64
+- darwin/arm64
+- linux/amd64
+- linux/arm64
+- windows/amd64
+artifacts:
+  linux/arm64:
+    path: linux-arm64/articles
+    sha256: 8371c285d0a262cfdfffbd32c4e6f2fd015ce66e39405f49ff3db55c7836c0a1
+    size: 6266032
+  windows/amd64:
+    path: windows-amd64/articles.exe
+    sha256: 42548923360d29d3a31239763eb7f5d221a587b43c0430f5dff50b13395ca27b
+    size: 10554368
+  darwin/arm64:
+    path: darwin-arm64/articles
+    sha256: f33ebcb68ee1b3ca9ed8ca3422c2e6a60cad2c04fb59ae816ffee8f9f43d2494
+    size: 8072720
+  linux/amd64:
+    path: linux-amd64/articles
+    sha256: d017d768b996469f69bbc940177238b603c922c8146d047ec2a55913db2ab149
+    size: 6849632
+  darwin/amd64:
+    path: darwin-amd64/articles
+    sha256: 9a5e76525fc481c590a72df2e19448c25f9877ffad632ee526c97fd6407f3ae6
+    size: 8342696
+contract:
+  version: 1
+  api: articles REST API
+  env:
+    required:
+    - SERVER_PORT
+    - DATABASE_URL
+    - JWT_SECRET
+    optional:
+    - CORS_ALLOWED_ORIGINS
+    - PUBLIC_SITE_URL
+    - ARTICLES_ADMIN_ONLY
+    defaults: {}
+  db: postgresql@15
+  network:
+    inbound:
+    - http
+    outbound:
+    - https
+  resources:
+    memory: 128m
+    disk: 256m
+    startup_seconds: 5
+runtime:
+  base: self-contained-static
+  libc: musl
+  dependencies: []
+provenance:
+  source: github-getecosphere:getecosphere/articles.git
+  commit: cd234cfc20872f5d6ae7c8aad705c6e64fa50796
+  built_by: eco@0.3.9
+  built_at: 2026-08-17T08:43:32Z
+  target: x86_64-unknown-linux-musl
+release:
+- 1.1.0
+docs:
+- README.md
+- api.md
+- changelog.md

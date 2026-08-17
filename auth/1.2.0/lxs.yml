@@ -1,0 +1,87 @@
+name: auth
+domain: auth
+version: 1.2.0
+publisher: stuff8
+status: unverified
+license: mit
+summary: 'Authentication: login, register, JWT, email verification'
+targets:
+- darwin/amd64
+- darwin/arm64
+- linux/amd64
+- linux/arm64
+- windows/amd64
+artifacts:
+  linux/arm64:
+    path: linux-arm64/auth
+    sha256: fae3a84b80ef8914532b50469b35023fb89b1dc0679d9ef60981b80e4db2e981
+    size: 11714640
+  windows/amd64:
+    path: windows-amd64/auth.exe
+    sha256: c88a67a86c3ce81d10c00c89c5ccb328322a438317e6041a42d653e326ca3ea5
+    size: 18515968
+  linux/amd64:
+    path: linux-amd64/auth
+    sha256: c0c982df7c064adefaffec9d3654af99005efd21f54fcb33e4d79b89c11b1150
+    size: 13074768
+  darwin/amd64:
+    path: darwin-amd64/auth
+    sha256: 8ae644a747574c41bb594e327c72e9bd9d9713d0c74fa662a71df91dea0bc7d4
+    size: 16235260
+  darwin/arm64:
+    path: darwin-arm64/auth
+    sha256: 0f0b598eebb644cb378a1917c727e084e3f2a54737d33b0e33e8325d968f8172
+    size: 15618144
+contract:
+  version: 1
+  api: auth REST API
+  env:
+    required:
+    - JWT_SECRET
+    - MONGODB_URI
+    - SERVER_PORT
+    optional:
+    - JWT_EXPIRATION
+    - API_BASE_URL
+    - CORS_ALLOWED_ORIGINS
+    - RATE_LIMIT_GENERAL_BURST
+    - RATE_LIMIT_GENERAL_REPLENISH_SECS
+    - RATE_LIMIT_AUTH_BURST
+    - RATE_LIMIT_AUTH_REPLENISH_SECS
+    - EMAIL_VERIFICATION_REQUIRED
+    - EMAIL_VERIFICATION_TTL_HOURS
+    - ECO_AUTH_DEFAULT_ROLE
+    - ECO_AUTH_ROLES
+    - BREVO_API_KEY
+    - MAIL_FROM_EMAIL
+    - MAIL_FROM_NAME
+    defaults: {}
+  db: mongodb@7
+  network:
+    inbound:
+    - http
+    outbound:
+    - https
+  resources:
+    memory: 64m
+    disk: 128m
+    startup_seconds: 5
+runtime:
+  base: self-contained-static
+  libc: musl
+  dependencies: []
+provenance:
+  source: github-getecosphere:getecosphere/auth.git
+  commit: 227f51e5c584dfd5d3a5234cc0e52301ccc1e123
+  built_by: eco@0.3.9
+  built_at: 2026-08-17T07:19:58Z
+  target: x86_64-unknown-linux-musl
+release:
+- 1.2.0
+docs:
+- README.md
+- api.md
+- changelog.md
+- examples.sh
+- gotchas.md
+- openapi.json

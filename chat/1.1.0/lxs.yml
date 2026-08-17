@@ -1,0 +1,81 @@
+name: chat
+domain: chat
+version: 1.1.0
+publisher: stuff8
+status: unverified
+license: mit
+summary: 'Chat: realtime messaging via WebSocket, presence, Redis pub/sub'
+targets:
+- darwin/amd64
+- darwin/arm64
+- linux/amd64
+- linux/arm64
+- windows/amd64
+artifacts:
+  linux/amd64:
+    path: linux-amd64/chat
+    sha256: d5ceae044bee3dbcff92884d04aea48b6ac236d8cf00c4f9562f22d285f8ff19
+    size: 14880616
+  darwin/amd64:
+    path: darwin-amd64/chat
+    sha256: ac256dfcf6264d694b28202c6f8f061d50bbe36004feab07122534c7bc4bbf1a
+    size: 18166220
+  linux/arm64:
+    path: linux-arm64/chat
+    sha256: 4927d84feef69bf2df9e564f8b078f7b656acde28564eede37bc70d357794f94
+    size: 13426920
+  darwin/arm64:
+    path: darwin-arm64/chat
+    sha256: cf111811450b5bbed12adb73cd3db5cf4e459e612cd895b424d42d276f516d8a
+    size: 17484160
+  windows/amd64:
+    path: windows-amd64/chat.exe
+    sha256: 3df4ee0ec810f382a971501e94e03bc177308cf5c60346e01d89dd5ffe539845
+    size: 20755456
+contract:
+  version: 2
+  api: chat REST + WebSocket API (conversations, group chat + invite-by-email, messages, presence)
+  env:
+    required:
+    - SERVER_PORT
+    - API_BASE_PATH
+    - MONGODB_URI
+    - REDIS_URL
+    - JWT_SECRET
+    optional:
+    - STORAGE_API_URL
+    - NOTIFICATIONS_API_URL
+    - AUTH_BASE_URL
+    - CORS_ALLOWED_ORIGINS
+    defaults: {}
+  db: mongodb@7
+  network:
+    inbound:
+    - http
+    - ws
+    outbound:
+    - http
+  resources:
+    memory: 192m
+    disk: 256m
+    startup_seconds: 5
+runtime:
+  base: self-contained-static
+  libc: musl
+  dependencies:
+  - redis
+provenance:
+  source: github-getecosphere:getecosphere/chat.git
+  commit: eaa8ad82d80f4fea8e812f73664bc0d7afcdd1cd
+  built_by: eco@0.3.9
+  built_at: 2026-08-17T08:54:32Z
+  target: x86_64-unknown-linux-musl
+release:
+- 1.1.0
+docs:
+- README.md
+- api.md
+- changelog.md
+- examples.sh
+- gotchas.md
+- openapi.json

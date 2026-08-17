@@ -1,0 +1,381 @@
+{
+  "openapi": "3.0.3",
+  "info": {
+    "title": "chat",
+    "version": "1.0.2",
+    "description": "Persistent private conversations: REST CRUD for conversations/messages, a per-conversation WebSocket stream, sticker catalog, and attachment uploads proxied to the Storage domain. Auth: HS512 JWT bearer (sub = user id)."
+  },
+  "servers": [
+    { "url": "http://127.0.0.1:26377" }
+  ],
+  "security": [
+    { "bearerAuth": [] }
+  ],
+  "paths": {
+    "/health": {
+      "get": {
+        "summary": "Liveness probe",
+        "security": [],
+        "responses": {
+          "200": {
+            "description": "OK - persistent chat domain (text/plain)"
+          }
+        }
+      }
+    },
+    "/api/chat/health": {
+      "get": {
+        "summary": "Liveness probe (gateway alias)",
+        "security": [],
+        "responses": {
+          "200": {
+            "description": "OK - persistent chat domain (text/plain)"
+          }
+        }
+      }
+    },
+    "/api/chat/stickers": {
+      "get": {
+        "summary": "Sticker catalog",
+        "security": [],
+        "responses": {
+          "200": {
+            "description": "Sticker packs",
+            "content": {
+              "application/json": {
+                "schema": { "$ref": "#/components/schemas/StickerCatalog" }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/chat/stickers/{pack}.webp": {
+      "get": {
+        "summary": "Sticker sheet image for a pack",
+        "security": [],
+        "parameters": [
+          { "name": "pack", "in": "path", "required": true, "schema": { "type": "string" } }
+        ],
+        "responses": {
+          "200": {
+            "description": "WebP sheet, Cache-Control public max-age=86400"
+          },
+          "404": {
+            "description": "No sheet compiled for this pack",
+            "content": {
+              "application/json": {
+                "schema": { "$ref": "#/components/schemas/ErrorBody" }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/chat/conversations": {
+      "get": {
+        "summary": "List conversations for the authenticated user",
+        "responses": {
+          "200": {
+            "description": "Conversations, newest updated_at first",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "array",
+                  "items": { "$ref": "#/components/schemas/Conversation" }
+                }
+              }
+            }
+          },
+          "401": { "description": "Missing bearer token / Invalid or expired token" }
+        }
+      },
+      "post": {
+        "summary": "Create a conversation",
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": { "$ref": "#/components/schemas/CreateConversation" }
+            }
+          }
+        },
+        "responses": {
+          "201": {
+            "description": "Created conversation",
+            "content": {
+              "application/json": {
+                "schema": { "$ref": "#/components/schemas/Conversation" }
+              }
+            }
+          },
+          "400": { "description": "At least two participants and a context reference are required" },
+          "403": { "description": "Conversation creator must be a participant" },
+          "401": { "description": "Unauthorized" }
+        }
+      }
+    },
+    "/api/chat/conversations/{id}/messages": {
+      "get": {
+        "summary": "List messages in a conversation (oldest first)",
+        "parameters": [
+          { "name": "id", "in": "path", "required": true, "schema": { "type": "string" } },
+          { "name": "before", "in": "query", "required": false, "schema": { "type": "string", "format": "date-time", "description": "RFC3339; return messages older than this" } },
+          { "name": "limit", "in": "query", "required": false, "schema": { "type": "integer", "default": 50, "minimum": 1, "maximum": 100 } }
+        ],
+        "responses": {
+          "200": {
+            "description": "Messages ascending by created_at",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "array",
+                  "items": { "$ref": "#/components/schemas/ChatMessage" }
+                }
+              }
+            }
+          },
+          "404": { "description": "Conversation not found" },
+          "403": { "description": "Only conversation participants may access this resource" },
+          "401": { "description": "Unauthorized" }
+        }
+      },
+      "post": {
+        "summary": "Send a message",
+        "parameters": [
+          { "name": "id", "in": "path", "required": true, "schema": { "type": "string" } }
+        ],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": { "$ref": "#/components/schemas/SendMessage" }
+            }
+          }
+        },
+        "responses": {
+          "201": {
+            "description": "Created message",
+            "content": {
+              "application/json": {
+                "schema": { "$ref": "#/components/schemas/ChatMessage" }
+              }
+            }
+          },
+          "400": { "description": "Message content is required / Offer amount must be a positive number" },
+          "404": { "description": "Conversation not found" },
+          "403": { "description": "Only conversation participants may access this resource" },
+          "502": { "description": "Redis service unavailable / Redis stream write failed" },
+          "401": { "description": "Unauthorized" }
+        }
+      }
+    },
+    "/api/chat/conversations/{id}/attachments": {
+      "post": {
+        "summary": "Upload an attachment (multipart, proxied to Storage domain)",
+        "parameters": [
+          { "name": "id", "in": "path", "required": true, "schema": { "type": "string" } }
+        ],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "multipart/form-data": {
+              "schema": {
+                "type": "object",
+                "required": ["owner_id", "file"],
+                "properties": {
+                  "owner_id": { "type": "string", "description": "Must equal the authenticated user" },
+                  "file": { "type": "string", "format": "binary", "description": "Max 2 MB" }
+                }
+              }
+            }
+          }
+        },
+        "responses": {
+          "201": {
+            "description": "Stored attachment key",
+            "content": {
+              "application/json": {
+                "schema": { "$ref": "#/components/schemas/Attachment" }
+              }
+            }
+          },
+          "400": { "description": "Invalid multipart form / owner_id is required / file is required / Chat attachment size is limited to 2 MB / Invalid content type" },
+          "403": { "description": "owner_id must match the signed-in user" },
+          "404": { "description": "Conversation not found" },
+          "502": { "description": "Storage service unavailable / Storage returned an invalid response" }
+        }
+      }
+    },
+    "/api/chat/marketplace/sale-announcement": {
+      "post": {
+        "summary": "Announce a completed marketplace sale into matching conversations",
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": { "$ref": "#/components/schemas/SaleAnnouncement" }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "Number of conversations notified",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": { "notified": { "type": "integer" } }
+                }
+              }
+            }
+          },
+          "401": { "description": "Unauthorized" }
+        }
+      }
+    },
+    "/api/chat/conversations/{id}/ws": {
+      "get": {
+        "summary": "WebSocket stream for a conversation (upgrade endpoint)",
+        "description": "Opens a WebSocket. Auth via ?token=<HS512 JWT>. Server frames: {\"type\":\"message\",\"message\":{...}} or {\"type\":\"typing\",\"sender_id\",\"is_typing\"}. Client frames: {\"type\":\"typing\",\"is_typing\":bool} or a raw SendMessage body.",
+        "security": [],
+        "parameters": [
+          { "name": "id", "in": "path", "required": true, "schema": { "type": "string" } },
+          { "name": "token", "in": "query", "required": true, "schema": { "type": "string", "description": "HS512 JWT; sub = user id" } }
+        ],
+        "responses": {
+          "101": { "description": "Switching Protocols (WebSocket established)" },
+          "401": { "description": "Invalid or expired token" },
+          "404": { "description": "Conversation not found" },
+          "403": { "description": "Only conversation participants may access this resource" }
+        }
+      }
+    }
+  },
+  "components": {
+    "securitySchemes": {
+      "bearerAuth": {
+        "type": "http",
+        "scheme": "bearer",
+        "description": "HS512 JWT; sub claim is the user id"
+      }
+    },
+    "schemas": {
+      "ErrorBody": {
+        "type": "object",
+        "properties": { "error": { "type": "string" } }
+      },
+      "ConversationContext": {
+        "type": "object",
+        "required": ["domain", "reference_id"],
+        "properties": {
+          "domain": { "type": "string" },
+          "reference_id": { "type": "string" },
+          "title": { "type": "string", "nullable": true }
+        }
+      },
+      "Conversation": {
+        "type": "object",
+        "properties": {
+          "conversation_id": { "type": "string", "format": "uuid" },
+          "kind": { "type": "string", "default": "direct" },
+          "participant_ids": { "type": "array", "items": { "type": "string" } },
+          "context": { "$ref": "#/components/schemas/ConversationContext" },
+          "created_at": { "type": "string", "format": "date-time" },
+          "updated_at": { "type": "string", "format": "date-time" }
+        }
+      },
+      "CreateConversation": {
+        "type": "object",
+        "required": ["participant_ids", "context"],
+        "properties": {
+          "participant_ids": { "type": "array", "items": { "type": "string" }, "minItems": 2 },
+          "kind": { "type": "string", "default": "direct" },
+          "context": { "$ref": "#/components/schemas/ConversationContext" }
+        }
+      },
+      "Attachment": {
+        "type": "object",
+        "properties": {
+          "key": { "type": "string" },
+          "filename": { "type": "string" },
+          "content_type": { "type": "string" },
+          "size": { "type": "integer", "format": "int64" }
+        }
+      },
+      "SaleMessageInfo": {
+        "type": "object",
+        "properties": {
+          "title": { "type": "string" },
+          "buyer_id": { "type": "string" },
+          "buyer_name": { "type": "string" },
+          "final_price": { "type": "number" }
+        }
+      },
+      "ChatMessage": {
+        "type": "object",
+        "properties": {
+          "message_id": { "type": "string", "format": "uuid" },
+          "conversation_id": { "type": "string" },
+          "sender_id": { "type": "string" },
+          "body": { "type": "string" },
+          "sticker_id": { "type": "string", "nullable": true },
+          "offer_amount": { "type": "number", "nullable": true },
+          "attachments": { "type": "array", "items": { "$ref": "#/components/schemas/Attachment" } },
+          "kind": { "type": "string", "nullable": true },
+          "sale": { "$ref": "#/components/schemas/SaleMessageInfo" },
+          "created_at": { "type": "string", "format": "date-time" }
+        }
+      },
+      "SendMessage": {
+        "type": "object",
+        "properties": {
+          "sender_id": { "type": "string", "description": "Ignored; overridden with the authenticated user" },
+          "body": { "type": "string" },
+          "sticker_id": { "type": "string", "nullable": true },
+          "offer_amount": { "type": "number", "nullable": true },
+          "attachments": { "type": "array", "items": { "$ref": "#/components/schemas/Attachment" } },
+          "kind": { "type": "string", "nullable": true },
+          "sale": { "$ref": "#/components/schemas/SaleMessageInfo" }
+        }
+      },
+      "SaleAnnouncement": {
+        "type": "object",
+        "required": ["item_id", "title", "buyer_id", "buyer_name", "final_price"],
+        "properties": {
+          "item_id": { "type": "string" },
+          "title": { "type": "string" },
+          "buyer_id": { "type": "string" },
+          "buyer_name": { "type": "string" },
+          "final_price": { "type": "number" }
+        }
+      },
+      "StickerCatalog": {
+        "type": "object",
+        "properties": {
+          "packs": {
+            "type": "array",
+            "items": {
+              "type": "object",
+              "properties": {
+                "id": { "type": "string" },
+                "name": { "type": "string" },
+                "preview_url": { "type": "string", "nullable": true },
+                "stickers": {
+                  "type": "array",
+                  "items": {
+                    "type": "object",
+                    "properties": {
+                      "id": { "type": "string" },
+                      "label": { "type": "string" }
+                    }
+                  }
+                }
+              }
+            }
+          }
+        }
+      }
+    }
+  }
+}

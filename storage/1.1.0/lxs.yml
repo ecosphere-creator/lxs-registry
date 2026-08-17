@@ -1,0 +1,79 @@
+name: storage
+domain: storage
+version: 1.1.0
+publisher: stuff8
+status: unverified
+license: mit
+summary: 'Photos & media: uploads, image/video processing, S3 storage, thumbnails'
+targets:
+- darwin/amd64
+- darwin/arm64
+- linux/amd64
+- linux/arm64
+artifacts:
+  linux/amd64:
+    path: linux-amd64/storage
+    sha256: be312a5e655387125a6744829bcb61ad666de9da9ddba6e7c2462d69b089a88a
+    size: 21191272
+  linux/arm64:
+    path: linux-arm64/storage
+    sha256: 25044b78585eef54d966795a7001524e91d91b04b12f18f15483978e49e873c2
+    size: 18932088
+  darwin/arm64:
+    path: darwin-arm64/storage
+    sha256: ea34257e2f4152fe41ae3b6a1721758d1f15d204c7f58371d06bd40ae6e1efe4
+    size: 25441744
+  darwin/amd64:
+    path: darwin-amd64/storage
+    sha256: d7e50f7a6a6f0226c19d3c71da711783d92e49c7d06bcb0dc52363409d360947
+    size: 27478500
+contract:
+  version: 1
+  api: photos REST API (upload + serve + media metadata)
+  env:
+    required:
+    - SERVER_PORT
+    - API_BASE_URL
+    - S3_ENDPOINT
+    - S3_REGION
+    - S3_BUCKET
+    - S3_ACCESS_KEY
+    - S3_SECRET_KEY
+    optional:
+    - CORS_ALLOWED_ORIGINS
+    - MAX_IMAGE_MB
+    - MAX_DOCUMENT_MB
+    - MAX_IMAGE_PIXELS
+    - MAX_VIDEO_MB
+    defaults:
+      S3_BUCKET: stuff8-storage
+  db: none
+  network:
+    inbound:
+    - http
+    outbound:
+    - s3
+  resources:
+    memory: 192m
+    disk: 1g
+    startup_seconds: 5
+runtime:
+  base: self-contained-static
+  libc: musl
+  dependencies:
+  - ffmpeg
+provenance:
+  source: github-getecosphere:getecosphere/storage.git
+  commit: af172176a2be5c26c2289ea1e1d76ce5a01ade12
+  built_by: eco@0.3.9
+  built_at: 2026-08-17T10:09:19Z
+  target: x86_64-unknown-linux-musl
+release:
+- 1.1.0
+docs:
+- README.md
+- api.md
+- changelog.md
+- examples.sh
+- gotchas.md
+- openapi.json

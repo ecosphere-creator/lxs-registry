@@ -1,0 +1,51 @@
+name: auth-ui
+domain: auth
+version: 0.3.0
+publisher: stuff8
+status: unverified
+license: mit
+summary: White-label signin/signup pages for the auth domain (Leptos SSR)
+targets:
+- linux/amd64
+artifacts:
+  linux/amd64:
+    path: linux-amd64/auth-ui
+    sha256: 1651ec574323db5d6ccdf5c56188c18c945ded81dfd44a2ffbbf30eeab5c5336
+    size: 1697536
+contract:
+  version: 1
+  api: 'auth-ui pages: GET /signin, GET /signup'
+  env:
+    required:
+    - SERVER_PORT
+    optional:
+    - AUTH_API_BASE
+    - AUTH_REDIRECT_URL
+    defaults: {}
+  db: none
+  network:
+    inbound:
+    - http
+    outbound:
+    - http
+  resources:
+    memory: 32m
+    disk: 32m
+    startup_seconds: 5
+runtime:
+  base: self-contained-static
+  libc: musl
+  dependencies: []
+provenance:
+  source: ''
+  commit: 88cf19c156d61a15eb19e222aba242877c88ae49
+  built_by: eco@0.3.9
+  built_at: 2026-08-17T13:10:08Z
+  target: x86_64-unknown-linux-musl
+release:
+- 0.3.0
+docs:
+- README.md
+- api.md
+- changelog.md
+- gotchas.md

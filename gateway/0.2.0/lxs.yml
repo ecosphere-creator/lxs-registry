@@ -1,0 +1,52 @@
+name: gateway
+domain: gateway
+version: 0.2.0
+publisher: stuff8
+status: unverified
+license: mit
+summary: 'Estate front door: default-deny HTTP reverse-proxy + authorization middleware (JWT, roles, strip/rewrite) with content-negotiated HTML/JSON error pages'
+targets:
+- linux/amd64
+artifacts:
+  linux/amd64:
+    path: linux-amd64/gateway
+    sha256: 9c07f9f81c695b461a0b9522b68d4a4c825d357ee25420fc0b2680c342206c5c
+    size: 4000368
+contract:
+  version: 1
+  api: 'gateway: HTTP reverse-proxy + ACL; routes from GATEWAY_CONFIG'
+  env:
+    required:
+    - SERVER_PORT
+    - JWT_SECRET
+    - GATEWAY_CONFIG
+    optional: []
+    defaults: {}
+  db: none
+  network:
+    inbound:
+    - http
+    outbound:
+    - http
+  resources:
+    memory: 32m
+    disk: 32m
+    startup_seconds: 5
+runtime:
+  base: self-contained-static
+  libc: musl
+  dependencies: []
+provenance:
+  source: github-getecosphere:getecosphere/gateway.git
+  commit: a3cc879be94e02f4a6e2a291a16dc97372ecea1c
+  built_by: eco@0.3.9
+  built_at: 2026-08-17T09:19:03Z
+  target: ''
+release:
+- 0.2.0
+docs:
+- README.md
+- api.md
+- changelog.md
+- examples.sh
+- gotchas.md

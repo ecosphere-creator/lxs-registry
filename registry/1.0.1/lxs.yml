@@ -38,7 +38,7 @@ runtime:
   dependencies:
   - git
 provenance:
-  source: git@github-getecosphere:getecosphere/registry.git
+  source: https://github.com/getecosphere/registry.git
   commit: c5227f46899a56f17bf09b875bd95f04a301617c
   built_by: eco@0.2.0
   built_at: 2026-08-13T01:08:18Z

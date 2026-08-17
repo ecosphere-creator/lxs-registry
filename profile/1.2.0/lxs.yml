@@ -58,7 +58,7 @@ runtime:
   libc: musl
   dependencies: []
 provenance:
-  source: github-getecosphere:getecosphere/profile.git
+  source: https://github.com/getecosphere/profile.git
   commit: 9c3af065b81ad536ce53048f1c40872fe6757d66
   built_by: eco@0.3.9
   built_at: 2026-08-17T10:09:10Z

@@ -60,7 +60,7 @@ runtime:
   libc: musl
   dependencies: []
 provenance:
-  source: github-getecosphere:getecosphere/articles.git
+  source: https://github.com/getecosphere/articles.git
   commit: cd234cfc20872f5d6ae7c8aad705c6e64fa50796
   built_by: eco@0.3.9
   built_at: 2026-08-17T08:43:32Z

@@ -57,7 +57,7 @@ runtime:
   libc: musl
   dependencies: []
 provenance:
-  source: ''
+  source: https://github.com/getecosphere/auth-ui.git
   commit: 88cf19c156d61a15eb19e222aba242877c88ae49
   built_by: eco@0.3.9
   built_at: 2026-08-17T12:56:52Z

@@ -37,7 +37,7 @@ runtime:
   libc: musl
   dependencies: []
 provenance:
-  source: github-getecosphere:getecosphere/gateway.git
+  source: https://github.com/getecosphere/gateway.git
   commit: a3cc879be94e02f4a6e2a291a16dc97372ecea1c
   built_by: eco@0.3.9
   built_at: 2026-08-17T09:19:03Z

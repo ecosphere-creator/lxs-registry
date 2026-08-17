@@ -51,7 +51,7 @@ runtime:
   libc: musl
   dependencies: []
 provenance:
-  source: git@github-getecosphere:ecosphere-creator/ecobook.git
+  source: https://github.com/getecosphere/ecobook.git
   commit: 3b005135612c1ecbdb4abdfbea155bdf0611ad32
   built_by: eco@0.2.0
   built_at: 2026-08-13T01:16:39Z

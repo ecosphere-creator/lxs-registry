@@ -40,7 +40,7 @@ runtime:
   libc: musl
   dependencies: []
 provenance:
-  source: git@github.com:kelastanpatembok/notifications.git
+  source: https://github.com/getecosphere/notifications.git
   commit: c3ef0495419baa5d57fb55bc5a168a8f48775e83
   built_by: eco@0.2.0
   built_at: 2026-08-12T08:37:59Z

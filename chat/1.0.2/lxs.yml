@@ -44,7 +44,7 @@ runtime:
   dependencies:
   - redis
 provenance:
-  source: git@github.com:kelastanpatembok/chat.git
+  source: https://github.com/getecosphere/chat.git
   commit: 31dc6c141b72c6cbd35da44955fad0d0b2a3ffe3
   built_by: eco@0.2.0
   built_at: 2026-08-13T00:57:29Z

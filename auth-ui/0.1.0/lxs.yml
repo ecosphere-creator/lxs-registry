@@ -45,7 +45,7 @@ runtime:
   dependencies: []
 
 provenance:
-  source: ""
+  source: https://github.com/getecosphere/auth-ui.git
   commit: ""
   built_by: ""
   built_at: ""

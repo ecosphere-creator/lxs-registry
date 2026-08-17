@@ -74,7 +74,7 @@ runtime:
   libc: musl
   dependencies: []
 provenance:
-  source: github-getecosphere:getecosphere/auth.git
+  source: https://github.com/getecosphere/auth.git
   commit: 87ac8ea7a8b89f34f13f251ec59d53be9555a708
   built_by: eco@0.3.9
   built_at: 2026-08-17T11:38:49Z

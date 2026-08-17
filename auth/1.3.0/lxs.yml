@@ -1,0 +1,90 @@
+name: auth
+domain: auth
+version: 1.3.0
+publisher: stuff8
+status: unverified
+license: mit
+summary: 'Authentication: login, register, JWT, email verification, signup events'
+targets:
+- darwin/amd64
+- darwin/arm64
+- linux/amd64
+- linux/arm64
+- windows/amd64
+artifacts:
+  darwin/amd64:
+    path: darwin-amd64/auth
+    sha256: e0f28921ade4b9fbbafb3759d833afe7c9500d2a0fe97a48a8df0eff7ca6d165
+    size: 16265220
+  linux/amd64:
+    path: linux-amd64/auth
+    sha256: 258bd80209e302f172fdd6f02f35c1c478c761f44fc3e433118a10d6b280547e
+    size: 13117320
+  linux/arm64:
+    path: linux-arm64/auth
+    sha256: 1e9cc001c20fee4e8c070a7138f9d7062ca7cbab153f72b123603d91a4cd6430
+    size: 11745232
+  windows/amd64:
+    path: windows-amd64/auth.exe
+    sha256: a0f43ce3c93b881445143dcb30510c47b25eb4bdd0372fb8a3673f688141a0ce
+    size: 18575872
+  darwin/arm64:
+    path: darwin-arm64/auth
+    sha256: 61f9193fb5050fec4ab5f41a670cf4463b6a4e78eab8f620f78d3d230b6c15e3
+    size: 15620368
+contract:
+  version: 1
+  api: auth REST API
+  env:
+    required:
+    - JWT_SECRET
+    - MONGODB_URI
+    - SERVER_PORT
+    optional:
+    - JWT_EXPIRATION
+    - API_BASE_URL
+    - CORS_ALLOWED_ORIGINS
+    - RATE_LIMIT_GENERAL_BURST
+    - RATE_LIMIT_GENERAL_REPLENISH_SECS
+    - RATE_LIMIT_AUTH_BURST
+    - RATE_LIMIT_AUTH_REPLENISH_SECS
+    - EMAIL_VERIFICATION_REQUIRED
+    - EMAIL_VERIFICATION_TTL_HOURS
+    - ECO_AUTH_DEFAULT_ROLE
+    - ECO_AUTH_ROLES
+    - BREVO_API_KEY
+    - MAIL_FROM_EMAIL
+    - MAIL_FROM_NAME
+    - SIGNUP_EVENT_URL
+    - SIGNUP_EVENT_TOKEN
+    defaults: {}
+  db: mongodb@7
+  network:
+    inbound:
+    - http
+    outbound:
+    - http
+    - https
+  resources:
+    memory: 64m
+    disk: 128m
+    startup_seconds: 5
+runtime:
+  base: self-contained-static
+  libc: musl
+  dependencies: []
+provenance:
+  source: github-getecosphere:getecosphere/auth.git
+  commit: 9b3cd3209365749c6a052ba3f790f159e614fbc2
+  built_by: eco@0.3.9
+  built_at: 2026-08-17T11:35:59Z
+  target: x86_64-unknown-linux-musl
+release:
+- 1.3.0
+docs:
+- README.md
+- api.md
+- changelog.md
+- examples.sh
+- gotchas.md
+- openapi.json

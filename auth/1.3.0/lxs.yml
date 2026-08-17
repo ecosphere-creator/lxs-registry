@@ -75,7 +75,7 @@ runtime:
   dependencies: []
 provenance:
   source: github-getecosphere:getecosphere/auth.git
-  commit: 9b3cd3209365749c6a052ba3f790f159e614fbc2
+  commit: 678f29909365749c6a052ba3f790f159e614fbc2
   built_by: eco@0.3.9
   built_at: 2026-08-17T11:35:59Z
   target: x86_64-unknown-linux-musl

@@ -12,26 +12,26 @@ targets:
 - linux/arm64
 - windows/amd64
 artifacts:
-  darwin/amd64:
-    path: darwin-amd64/auth
-    sha256: e0f28921ade4b9fbbafb3759d833afe7c9500d2a0fe97a48a8df0eff7ca6d165
-    size: 16265220
   linux/amd64:
     path: linux-amd64/auth
-    sha256: 258bd80209e302f172fdd6f02f35c1c478c761f44fc3e433118a10d6b280547e
-    size: 13117320
-  linux/arm64:
-    path: linux-arm64/auth
-    sha256: 1e9cc001c20fee4e8c070a7138f9d7062ca7cbab153f72b123603d91a4cd6430
-    size: 11745232
+    sha256: ba9149572c9c6146c4dfa65bfa936358c6a766bd1e31abd8a044229abc1663a2
+    size: 13116360
   windows/amd64:
     path: windows-amd64/auth.exe
-    sha256: a0f43ce3c93b881445143dcb30510c47b25eb4bdd0372fb8a3673f688141a0ce
-    size: 18575872
+    sha256: ca75f25c68f09ae6b0187ae94094cf24e578e70a6a86d7bb8562712e324a1a39
+    size: 18576384
+  darwin/amd64:
+    path: darwin-amd64/auth
+    sha256: c516a9744c17c61b93d1b9e8a28474d6b3682afba09b139ff05cd301c2e880d2
+    size: 16264500
   darwin/arm64:
     path: darwin-arm64/auth
-    sha256: 61f9193fb5050fec4ab5f41a670cf4463b6a4e78eab8f620f78d3d230b6c15e3
-    size: 15620368
+    sha256: e24ec8f4b074e7cc4f1a3917eae084d5d3e54a534754938bcc11aa73d1a08bff
+    size: 15625024
+  linux/arm64:
+    path: linux-arm64/auth
+    sha256: 83fe882ca805c48682413f71da10cad07e262dcbd34ee2c37696f9a2873b7956
+    size: 11744152
 contract:
   version: 1
   api: auth REST API
@@ -75,9 +75,9 @@ runtime:
   dependencies: []
 provenance:
   source: github-getecosphere:getecosphere/auth.git
-  commit: 678f29909365749c6a052ba3f790f159e614fbc2
+  commit: 87ac8ea7a8b89f34f13f251ec59d53be9555a708
   built_by: eco@0.3.9
-  built_at: 2026-08-17T11:35:59Z
+  built_at: 2026-08-17T11:38:49Z
   target: x86_64-unknown-linux-musl
 release:
 - 1.3.0

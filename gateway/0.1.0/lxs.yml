@@ -1,0 +1,72 @@
+name: gateway
+domain: gateway
+version: 0.1.0
+publisher: stuff8
+status: unverified
+license: mit
+summary: 'Estate front door: default-deny HTTP reverse-proxy + authorization middleware (JWT, roles, strip/rewrite)'
+targets:
+- darwin/amd64
+- darwin/arm64
+- linux/amd64
+- linux/arm64
+- windows/amd64
+artifacts:
+  darwin/amd64:
+    path: darwin-amd64/gateway
+    sha256: 85252751948e6851d975fbd6ed2c53fa61b0ee9fbf35b6d712e13740c970ba73
+    size: 5102208
+  darwin/arm64:
+    path: darwin-arm64/gateway
+    sha256: 89a6d2103fe3e20cf5d88a173942e7edbd13e1b8dff999cf4df57c5da5e80c43
+    size: 4968736
+  linux/amd64:
+    path: linux-amd64/gateway
+    sha256: 1cc1e53298c88adf6a50c395345aaa73b49ea89f3985d9173c01f45ef4e8e761
+    size: 3979824
+  linux/arm64:
+    path: linux-arm64/gateway
+    sha256: 3dd32216a2c2a830efd1798da186735b836eab3fbb11721253ca46ec5b72cb38
+    size: 3712104
+  windows/amd64:
+    path: windows-amd64/gateway.exe
+    sha256: 7bc06852cf82e46fcb6f501c3586f65a9f47012cae68109ba2a669e9d1df6981
+    size: 6094848
+contract:
+  version: 1
+  api: 'gateway: HTTP reverse-proxy + ACL; routes from GATEWAY_CONFIG'
+  env:
+    required:
+    - SERVER_PORT
+    - JWT_SECRET
+    - GATEWAY_CONFIG
+    optional: []
+    defaults: {}
+  db: none
+  network:
+    inbound:
+    - http
+    outbound:
+    - http
+  resources:
+    memory: 32m
+    disk: 32m
+    startup_seconds: 5
+runtime:
+  base: self-contained-static
+  libc: musl
+  dependencies: []
+provenance:
+  source: github-getecosphere:getecosphere/gateway.git
+  commit: 10f9178c4c177015d9e95849064cdcfaf0697cf8
+  built_by: eco@0.3.9
+  built_at: 2026-08-17T07:13:37Z
+  target: ''
+release:
+- 0.1.0
+docs:
+- README.md
+- api.md
+- changelog.md
+- examples.sh
+- gotchas.md

@@ -1,0 +1,10 @@
+{
+  "openapi": "3.0.0",
+  "info": { "title": "logging LXS (VictoriaLogs)", "version": "0.1.0" },
+  "paths": {
+    "/health": { "get": { "summary": "VictoriaLogs readiness" } },
+    "/insert/jsonline": { "post": { "summary": "Ingest NDJSON log lines", "requestBody": { "content": { "text/plain": { "example": "{\"_time\":\"2026-08-19T00:00:00Z\",\"_msg\":\"hi\",\"_stream\":\"{service=\\"x\\"}\"}" } } } } },
+    "/select/logsql/query": { "get": { "summary": "LogsQL query", "parameters": [ { "name": "query", "in": "query", "required": true, "schema": { "type": "string" } } ] } },
+    "/select/vmui": { "get": { "summary": "VictoriaLogs web UI (live tail)" } }
+  }
+}

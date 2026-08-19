@@ -1,0 +1,126 @@
+name: gateway
+domain: gateway
+version: 3.0.1
+publisher: stuff8
+status: unverified
+license: mit
+summary: 'Estate front door: default-deny HTTP reverse-proxy + authorization middleware (JWT, roles, single-session, strip/rewrite) with content-negotiated HTML/JSON error pages'
+targets:
+- darwin/arm64
+- linux/amd64
+artifacts:
+  linux/amd64:
+    path: linux-amd64/gateway
+    sha256: 132b270e0f332c97ddef08511cf731916f320a2d0bb554c2197940a385726770
+    size: 4223584
+  darwin/arm64:
+    path: darwin-arm64/gateway
+    sha256: 666d19facff173aca35dfb6ed16791242c6b8b8b121c1780305fffe04287e2f8
+    size: 5256240
+contract:
+  version: 2
+  api: 'gateway: HTTP reverse-proxy + ACL; routes from GATEWAY_CONFIG'
+  env:
+    required:
+    - SERVER_PORT
+    - JWT_SECRET
+    - GATEWAY_CONFIG
+    optional:
+    - AUTH_SESSION_CHECK_URL
+    - SESSION_REQUIRED
+    defaults:
+      SESSION_REQUIRED: 'true'
+    fields:
+      AUTH_SESSION_CHECK_URL:
+        required: false
+        type: url
+        default: ''
+        description: Auth session-status endpoint; the gateway re-validates each protected token's session here (single-session enforcement)
+        group: ''
+        choices: []
+        min: 0.0
+        max: 0.0
+        pattern: ''
+        secret: false
+        managed: auth-session-check
+        example: ''
+      SESSION_REQUIRED:
+        required: false
+        type: bool
+        default: 'true'
+        description: Reject bearer tokens without a session id (legacy pre-session tokens). Mirrors auth's SESSION_REQUIRED.
+        group: session
+        choices: []
+        min: 0.0
+        max: 0.0
+        pattern: ''
+        secret: false
+        managed: ''
+        example: ''
+      GATEWAY_CONFIG:
+        required: true
+        type: json
+        default: ''
+        description: Path to the gateway.json route/ACL config written by configgen
+        group: ''
+        choices: []
+        min: 0.0
+        max: 0.0
+        pattern: ''
+        secret: false
+        managed: ''
+        example: ''
+      JWT_SECRET:
+        required: true
+        type: secret
+        default: ''
+        description: HS512 signing key shared with the estate's auth service
+        group: ''
+        choices: []
+        min: 0.0
+        max: 0.0
+        pattern: ''
+        secret: false
+        managed: shared-jwt
+        example: ''
+      SERVER_PORT:
+        required: true
+        type: int
+        default: ''
+        description: Port the gateway listens on
+        group: ''
+        choices: []
+        min: 0.0
+        max: 0.0
+        pattern: ''
+        secret: false
+        managed: port
+        example: ''
+  db: none
+  network:
+    inbound:
+    - http
+    outbound:
+    - http
+  resources:
+    memory: 32m
+    disk: 32m
+    startup_seconds: 5
+runtime:
+  base: self-contained-static
+  libc: musl
+  dependencies: []
+provenance:
+  source: https://github.com/getecosphere/gateway.git
+  commit: 9367f82e49638431f6966837f5fc4673d6c1a546
+  built_by: eco@0.4.1
+  built_at: 2026-08-19T20:47:31Z
+  target: x86_64-unknown-linux-musl
+release:
+- 3.0.1
+docs:
+- README.md
+- api.md
+- changelog.md
+- examples.sh
+- gotchas.md

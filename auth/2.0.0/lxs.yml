@@ -1,0 +1,75 @@
+name: auth
+domain: auth
+version: 2.0.0
+publisher: stuff8
+status: unverified
+license: mit
+summary: 'Authentication: login, register, JWT, email verification, signup events'
+targets:
+- darwin/arm64
+- linux/amd64
+artifacts:
+  darwin/arm64:
+    path: darwin-arm64/auth
+    sha256: e24ec8f4b074e7cc4f1a3917eae084d5d3e54a534754938bcc11aa73d1a08bff
+    size: 15625024
+  linux/amd64:
+    path: linux-amd64/auth
+    sha256: ba9149572c9c6146c4dfa65bfa936358c6a766bd1e31abd8a044229abc1663a2
+    size: 13116360
+contract:
+  version: 1
+  api: auth REST API
+  env:
+    required:
+    - JWT_SECRET
+    - MONGODB_URI
+    - SERVER_PORT
+    optional:
+    - JWT_EXPIRATION
+    - API_BASE_URL
+    - CORS_ALLOWED_ORIGINS
+    - RATE_LIMIT_GENERAL_BURST
+    - RATE_LIMIT_GENERAL_REPLENISH_SECS
+    - RATE_LIMIT_AUTH_BURST
+    - RATE_LIMIT_AUTH_REPLENISH_SECS
+    - EMAIL_VERIFICATION_REQUIRED
+    - EMAIL_VERIFICATION_TTL_HOURS
+    - ECO_AUTH_DEFAULT_ROLE
+    - ECO_AUTH_ROLES
+    - BREVO_API_KEY
+    - MAIL_FROM_EMAIL
+    - MAIL_FROM_NAME
+    - SIGNUP_EVENT_URL
+    - SIGNUP_EVENT_TOKEN
+    defaults: {}
+  db: mongodb@7
+  network:
+    inbound:
+    - http
+    outbound:
+    - http
+    - https
+  resources:
+    memory: 64m
+    disk: 128m
+    startup_seconds: 5
+runtime:
+  base: self-contained-static
+  libc: musl
+  dependencies: []
+provenance:
+  source: https://github.com/getecosphere/auth.git
+  commit: 0331b8466e1afff2320842932d603cf35c8319d8
+  built_by: eco@0.4.1
+  built_at: 2026-08-19T04:06:24Z
+  target: x86_64-unknown-linux-musl
+release:
+- 2.0.0
+docs:
+- README.md
+- api.md
+- changelog.md
+- examples.sh
+- gotchas.md
+- openapi.json

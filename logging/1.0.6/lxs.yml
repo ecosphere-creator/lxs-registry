@@ -1,0 +1,67 @@
+name: logging
+domain: logging
+version: 1.0.6
+publisher: getecosphere
+status: unverified
+license: mit
+summary: 'Observability LXS: provisions VictoriaLogs (scope: host) and forwards NDJSON logs from estates/services to it (agent)'
+targets:
+- darwin/arm64
+- linux/amd64
+artifacts:
+  linux/amd64:
+    path: linux-amd64/logging
+    sha256: 08edaa366770fbe10277005a7768658660bb218829f611000db6ce16a41f4822
+    size: 4005624
+  darwin/arm64:
+    path: darwin-arm64/logging
+    sha256: bb29b2416e90411241ebe754f13156b01088aa0fef2c86236af4d5ab8832a14b
+    size: 4731264
+contract:
+  version: 1
+  api: 'logging: VictoriaLogs provisioning (server) + NDJSON log forwarding (agent)'
+  env:
+    required:
+    - MODE
+    optional:
+    - PORT
+    - BIND
+    - VICTORIA_VERSION
+    - VICTORIA_BIN_DIR
+    - VICTORIA_DATA_DIR
+    - VICTORIA_URL
+    - LOG_SOURCE
+    - STREAM
+    - SERVICE
+    defaults: {}
+    fields: {}
+  db: none
+  network:
+    inbound:
+    - http
+    outbound:
+    - http
+    - https
+  resources:
+    memory: 64m
+    disk: 256m
+    startup_seconds: 10
+runtime:
+  base: self-contained-static
+  libc: musl
+  dependencies: []
+provenance:
+  source: ''
+  commit: fa013f237e969e1c636630381c9fdc5bac6db9df
+  built_by: eco@0.4.1
+  built_at: 2026-08-19T21:02:43Z
+  target: x86_64-unknown-linux-musl
+release:
+- 1.0.6
+docs:
+- README.md
+- api.md
+- changelog.md
+- examples.sh
+- gotchas.md
+- openapi.json

@@ -1,0 +1,71 @@
+name: ecobook
+domain: ecobook
+version: 3.0.0
+publisher: getecosphere
+status: unverified
+license: mit
+summary: Ecobook — a reusable portrait book reader (Phaser.js) with a Rust axum book API and portable markdown deck-document import/export
+targets:
+- darwin/arm64
+- linux/amd64
+artifacts:
+  linux/amd64:
+    path: linux-amd64/ecobook
+    sha256: 6afdfc5651d3aa8cbc6db7d136242eba270aa74c5552095225a9de778a40daef
+    size: 27831352
+  darwin/arm64:
+    path: darwin-arm64/ecobook
+    sha256: 74c170e7a863e571fd4ee0cd99a055bede65e52b406da56aa2dbc5151effccc8
+    size: 32307200
+contract:
+  version: 1
+  api: ecobook REST API (/api/book, /api/book/:id, /api/book/catalog, /api/ecobook-files/*)
+  env:
+    required:
+    - SERVER_PORT
+    - MONGODB_URI
+    - JWT_SECRET
+    optional:
+    - API_BASE_URL
+    - CORS_ALLOWED_ORIGINS
+    - AUTH_BASE_URL
+    - PAYMENTS_BASE_URL
+    - COMMUNITY_BASE_URL
+    - STORAGE_BACKEND
+    - STORAGE_LOCAL_PATH
+    - S3_ENDPOINT
+    - S3_REGION
+    - S3_BUCKET
+    - S3_ACCESS_KEY
+    - S3_SECRET_KEY
+    - RATE_LIMIT_GENERAL_BURST
+    - RATE_LIMIT_GENERAL_REPLENISH_SECS
+    defaults: {}
+  db: mongodb@7
+  network:
+    inbound:
+    - http
+    outbound:
+    - http
+  resources:
+    memory: 256m
+    disk: 512m
+    startup_seconds: 5
+runtime:
+  base: self-contained-static
+  libc: musl
+  dependencies: []
+provenance:
+  source: https://github.com/getecosphere/ecobook.git
+  commit: 68a756774779fd5d4cdc023f1700f076409a4134
+  built_by: eco@0.4.1
+  built_at: 2026-08-19T05:47:05Z
+  target: x86_64-unknown-linux-musl
+release:
+- 3.0.0
+docs:
+- README.md
+- api.md
+- changelog.md
+- examples.sh
+- gotchas.md

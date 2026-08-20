@@ -1,0 +1,61 @@
+name: email-manager
+domain: email-manager
+version: 2.1.3
+publisher: stuff8
+status: unverified
+license: mit
+summary: 'Email: transactional delivery via Brevo, templates, rate limits, warmup'
+targets:
+- linux/amd64
+artifacts:
+  linux/amd64:
+    path: linux-amd64/email-manager
+    sha256: 6d5abb0527460cecedff4cd3be9f8071cf5ed5131a50039d9609c0a38429fa83
+    size: 13223616
+contract:
+  version: 1
+  api: email-manager REST API (send + templates + logs)
+  env:
+    required:
+    - SERVER_PORT
+    - API_BASE_PATH
+    - MONGODB_URI
+    - BREVO_API_KEY
+    - MAIL_FROM_EMAIL
+    - MAIL_FROM_NAME
+    optional:
+    - EMAIL_PER_RECIPIENT_DAY
+    - EMAIL_GLOBAL_PER_HOUR
+    - EMAIL_WARMUP_MAX_PER_HOUR
+    - EMAIL_WARMUP_DAYS
+    defaults: {}
+    fields: {}
+  db: mongodb@7
+  network:
+    inbound:
+    - http
+    outbound:
+    - https
+  resources:
+    memory: 128m
+    disk: 256m
+    startup_seconds: 5
+runtime:
+  base: self-contained-static
+  libc: musl
+  dependencies: []
+provenance:
+  source: https://github.com/getecosphere/email-manager.git
+  commit: 83c442918d34c24cba2e8ae77ac1409688bbe22b
+  built_by: eco@0.4.1
+  built_at: 2026-08-20T09:28:51Z
+  target: x86_64-unknown-linux-musl
+release:
+- 2.1.3
+docs:
+- README.md
+- api.md
+- changelog.md
+- examples.sh
+- gotchas.md
+- openapi.json

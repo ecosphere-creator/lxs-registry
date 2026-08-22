@@ -1,0 +1,56 @@
+name: articles-ui
+domain: articles
+version: 0.1.1
+publisher: stuff8
+status: unverified
+license: mit
+summary: 'Standalone Astro SSR UI for the articles domain: /articles/ + /articles/[slug]/ with SEO/OpenGraph, bun-compiled'
+targets:
+- darwin/arm64
+- linux/amd64
+artifacts:
+  darwin/arm64:
+    path: darwin-arm64/articles-ui
+    sha256: be181ba93c67a82ea2ae48feb18e1dcb2e50cfa53fcb230d6d2475303a2f60d0
+    size: 64073570
+  linux/amd64:
+    path: linux-amd64/articles-ui
+    sha256: 26229cffcf2704f9d588a7b88f8b27c14a6364883be610440ac565d168cc8723
+    size: 95217792
+contract:
+  version: 1
+  api: 'articles-ui pages: GET /articles/, GET /articles/[slug]/'
+  env:
+    required:
+    - SERVER_PORT
+    optional:
+    - ARTICLES_API_URL
+    - PUBLIC_SITE_URL
+    defaults: {}
+    fields: {}
+  db: none
+  network:
+    inbound:
+    - http
+    outbound:
+    - https
+  resources:
+    memory: 128m
+    disk: 64m
+    startup_seconds: 5
+runtime:
+  base: bun-compiled
+  libc: glibc
+  dependencies: []
+provenance:
+  source: https://github.com/getecosphere/articles.git
+  commit: f9d0836605cddd8b4f7d12e13b0d53d3b1b6bb8b
+  built_by: eco@0.4.1
+  built_at: 2026-08-22T14:27:06Z
+  target: x86_64-unknown-linux-musl
+release:
+- 0.1.1
+docs:
+- README.md
+- api.md
+- changelog.md

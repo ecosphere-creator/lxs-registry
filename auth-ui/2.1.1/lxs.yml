@@ -1,0 +1,57 @@
+name: auth-ui
+domain: auth
+version: 2.1.1
+publisher: stuff8
+status: unverified
+license: mit
+summary: White-label signin, signup, and password recovery pages for the auth domain (Leptos SSR)
+targets:
+- darwin/arm64
+- linux/amd64
+artifacts:
+  linux/amd64:
+    path: linux-amd64/auth-ui
+    sha256: 6fc2fcc3bdab83fd55792d97b626bf47010e67c5e2117674941fb69bc03fc93d
+    size: 2033520
+  darwin/arm64:
+    path: darwin-arm64/auth-ui
+    sha256: 7986518f13266eabdc9c27113e18bc44fc8a3e01f10ad7b2275921622fb303a9
+    size: 2810592
+contract:
+  version: 1
+  api: 'auth-ui pages: GET /signin, GET /signup, GET /forgot-password, GET /reset-password'
+  env:
+    required:
+    - SERVER_PORT
+    optional:
+    - AUTH_API_BASE
+    - AUTH_REDIRECT_URL
+    defaults: {}
+    fields: {}
+  db: none
+  network:
+    inbound:
+    - http
+    outbound:
+    - http
+  resources:
+    memory: 32m
+    disk: 32m
+    startup_seconds: 5
+runtime:
+  base: self-contained-static
+  libc: musl
+  dependencies: []
+provenance:
+  source: https://github.com/getecosphere/auth-ui.git
+  commit: 0a4be552cee957227bf5db47db8f46ba33d2d85e
+  built_by: eco@0.4.1
+  built_at: 2026-08-22T14:14:35Z
+  target: x86_64-unknown-linux-musl
+release:
+- 2.1.1
+docs:
+- README.md
+- api.md
+- changelog.md
+- gotchas.md

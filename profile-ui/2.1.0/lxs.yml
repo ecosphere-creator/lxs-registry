@@ -1,0 +1,58 @@
+name: profile-ui
+domain: profile
+version: 2.1.0
+publisher: stuff8
+status: unverified
+license: mit
+summary: 'White-label profile settings UI: avatar, name, bio, and password change (Leptos SSR)'
+targets:
+- darwin/arm64
+- linux/amd64
+artifacts:
+  darwin/arm64:
+    path: darwin-arm64/profile-ui
+    sha256: 3d1b706e12f9e5c921a0d703fc4f0cf62e67a665d528ddfe3588a447418e6e80
+    size: 2494672
+  linux/amd64:
+    path: linux-amd64/profile-ui
+    sha256: 9158eb70d4f3cd046a927a459b2af0bedc4616054d58d2870d5dc4d3898b8c31
+    size: 1890256
+contract:
+  version: 1
+  api: 'profile-ui pages: GET /profile, GET /profile-edit'
+  env:
+    required:
+    - SERVER_PORT
+    optional:
+    - PROFILE_API_BASE
+    - AUTH_API_BASE
+    - ECO_SESSION_KEY
+    defaults: {}
+    fields: {}
+  db: none
+  network:
+    inbound:
+    - http
+    outbound:
+    - http
+  resources:
+    memory: 32m
+    disk: 32m
+    startup_seconds: 5
+runtime:
+  base: self-contained-static
+  libc: musl
+  dependencies: []
+provenance:
+  source: https://github.com/getecosphere/profile-ui.git
+  commit: 7682229fc72dff8ff1380b576189ddf941f55c82
+  built_by: eco@0.4.1
+  built_at: 2026-08-22T14:14:21Z
+  target: x86_64-unknown-linux-musl
+release:
+- 2.1.0
+docs:
+- README.md
+- api.md
+- changelog.md
+- gotchas.md

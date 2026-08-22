@@ -11,12 +11,12 @@ targets:
 artifacts:
   linux/amd64:
     path: linux-amd64/auth
-    sha256: 6b1962c225fd1e639a6e615193e81e7ebd77f79d8d0fe9bc44b11053d4fda63f
-    size: 14340128
+    sha256: ce2e31a19aedc1c9062ba35d66879e43dfe63fea18852fd4cd9f0506f3229933
+    size: 14197840
   darwin/arm64:
     path: darwin-arm64/auth
-    sha256: 42e7b19225d78c1265abf38bc45155fc6f34bf95127808451b2b0a87b20d997d
-    size: 17009984
+    sha256: 636762a861ab27cfcbb00e0608d5248e895da2cd8cb88171c95c0c54a16e88fd
+    size: 16851184
 contract:
   version: 2
   api: auth REST API
@@ -35,7 +35,6 @@ contract:
     - RATE_LIMIT_AUTH_REPLENISH_SECS
     - EMAIL_VERIFICATION_REQUIRED
     - EMAIL_VERIFICATION_TTL_HOURS
-    - PASSWORD_RESET_TTL_MINUTES
     - EMAIL_VERIFICATION_PUBLIC_URL
     - ECO_AUTH_DEFAULT_ROLE
     - ECO_AUTH_ROLES
@@ -47,206 +46,23 @@ contract:
     - SESSION_REQUIRED
     defaults:
       RATE_LIMIT_AUTH_REPLENISH_SECS: '10'
-      SESSION_REQUIRED: 'true'
-      RATE_LIMIT_GENERAL_REPLENISH_SECS: '1'
-      EMAIL_VERIFICATION_REQUIRED: 'false'
-      EMAIL_VERIFICATION_TTL_HOURS: '24'
       RATE_LIMIT_AUTH_BURST: '5'
-      MAIL_FROM_NAME: Auth
-      PASSWORD_RESET_TTL_MINUTES: '60'
-      RATE_LIMIT_GENERAL_BURST: '120'
+      SESSION_REQUIRED: 'true'
       JWT_EXPIRATION: '2592000000'
+      RATE_LIMIT_GENERAL_BURST: '120'
+      EMAIL_VERIFICATION_TTL_HOURS: '24'
+      RATE_LIMIT_GENERAL_REPLENISH_SECS: '1'
+      MAIL_FROM_NAME: Auth
+      EMAIL_VERIFICATION_REQUIRED: 'false'
     fields:
-      SERVER_PORT:
-        required: true
-        type: int
-        default: ''
-        description: Port the auth API listens on
-        group: ''
-        choices: []
-        min: 0.0
-        max: 0.0
-        pattern: ''
-        secret: false
-        managed: port
-        example: ''
-      RATE_LIMIT_GENERAL_BURST:
-        required: false
-        type: int
-        default: '120'
-        description: Token-bucket burst for general routes
-        group: rate-limit
-        choices: []
-        min: 1.0
-        max: 0.0
-        pattern: ''
-        secret: false
-        managed: ''
-        example: ''
-      MAIL_FROM_EMAIL:
-        required: false
-        type: email
-        default: ''
-        description: Sender address for transactional mail
-        group: email
-        choices: []
-        min: 0.0
-        max: 0.0
-        pattern: ''
-        secret: false
-        managed: ''
-        example: ''
-      ECO_AUTH_ROLES:
-        required: false
-        type: csv
-        default: ''
-        description: Roles accepted at registration (from the estate identity model)
-        group: ''
-        choices: []
-        min: 0.0
-        max: 0.0
-        pattern: ''
-        secret: false
-        managed: identity-roles
-        example: ''
-      EMAIL_VERIFICATION_PUBLIC_URL:
-        required: false
-        type: url
-        default: ''
-        description: Public origin for verification links; empty uses the first CORS origin
-        group: email
-        choices: []
-        min: 0.0
-        max: 0.0
-        pattern: ''
-        secret: false
-        managed: ''
-        example: ''
-      SIGNUP_EVENT_TOKEN:
-        required: false
-        type: secret
-        default: ''
-        description: Bearer token for the signup event sink
-        group: ''
-        choices: []
-        min: 0.0
-        max: 0.0
-        pattern: ''
-        secret: false
-        managed: ''
-        example: ''
-      SESSION_REQUIRED:
+      EMAIL_VERIFICATION_REQUIRED:
         required: false
         type: bool
-        default: 'true'
-        description: 'Single-session enforcement: reject bearer tokens without an active session (re-login required after upgrade). Set false for a graceful legacy-token window.'
-        group: session
-        choices: []
-        min: 0.0
-        max: 0.0
-        pattern: ''
-        secret: false
-        managed: ''
-        example: ''
-      ECO_AUTH_DEFAULT_ROLE:
-        required: false
-        type: string
-        default: ''
-        description: Role assigned to new accounts (from the estate identity model)
-        group: ''
-        choices: []
-        min: 0.0
-        max: 0.0
-        pattern: ''
-        secret: false
-        managed: identity-roles
-        example: ''
-      RATE_LIMIT_GENERAL_REPLENISH_SECS:
-        required: false
-        type: int
-        default: '1'
-        description: Seconds per token refill for general routes
-        group: rate-limit
-        choices: []
-        min: 1.0
-        max: 0.0
-        pattern: ''
-        secret: false
-        managed: ''
-        example: ''
-      BREVO_API_KEY:
-        required: false
-        type: secret
-        default: ''
-        description: Brevo transactional API key used to send verification mail
+        default: 'false'
+        description: Require users to verify their email before public interactions; requires BREVO_API_KEY
         group: email
         choices: []
         min: 0.0
-        max: 0.0
-        pattern: ''
-        secret: false
-        managed: ''
-        example: ''
-      JWT_SECRET:
-        required: true
-        type: secret
-        default: ''
-        description: HS512 signing key shared by every estate service that validates tokens
-        group: ''
-        choices: []
-        min: 0.0
-        max: 0.0
-        pattern: ''
-        secret: false
-        managed: shared-jwt
-        example: ''
-      SIGNUP_EVENT_URL:
-        required: false
-        type: url
-        default: ''
-        description: Ingest endpoint for the user.signed_up event (fire-and-forget)
-        group: ''
-        choices: []
-        min: 0.0
-        max: 0.0
-        pattern: ''
-        secret: false
-        managed: signup-event
-        example: ''
-      API_BASE_URL:
-        required: false
-        type: url
-        default: ''
-        description: Public base URL clients use to reach this API; empty falls back to http://localhost:<port>/api
-        group: server
-        choices: []
-        min: 0.0
-        max: 0.0
-        pattern: ''
-        secret: false
-        managed: ''
-        example: ''
-      CORS_ALLOWED_ORIGINS:
-        required: false
-        type: csv-url
-        default: ''
-        description: Origins allowed to call this API; the first entry doubles as the app origin
-        group: ''
-        choices: []
-        min: 0.0
-        max: 0.0
-        pattern: ''
-        secret: false
-        managed: cors-origins
-        example: ''
-      RATE_LIMIT_AUTH_BURST:
-        required: false
-        type: int
-        default: '5'
-        description: Token-bucket burst for login/register/change-password
-        group: rate-limit
-        choices: []
-        min: 1.0
         max: 0.0
         pattern: ''
         secret: false
@@ -265,44 +81,70 @@ contract:
         secret: false
         managed: ''
         example: ''
-      JWT_EXPIRATION:
+      RATE_LIMIT_GENERAL_REPLENISH_SECS:
         required: false
         type: int
-        default: '2592000000'
-        description: JWT lifetime in milliseconds (30 days by default)
-        group: jwt
+        default: '1'
+        description: Seconds per token refill for general routes
+        group: rate-limit
         choices: []
-        min: 60000.0
+        min: 1.0
         max: 0.0
         pattern: ''
         secret: false
         managed: ''
         example: ''
-      PASSWORD_RESET_TTL_MINUTES:
+      SIGNUP_EVENT_TOKEN:
         required: false
-        type: int
-        default: '60'
-        description: Minutes a one-time password reset link remains valid
-        group: email
-        choices: []
-        min: 5.0
-        max: 1440.0
-        pattern: ''
-        secret: false
-        managed: ''
-        example: ''
-      MONGODB_URI:
-        required: true
-        type: uri
+        type: secret
         default: ''
-        description: MongoDB connection string for the estate's managed database
+        description: Bearer token for the signup event sink
         group: ''
         choices: []
         min: 0.0
         max: 0.0
         pattern: ''
         secret: false
-        managed: mongo-db
+        managed: ''
+        example: ''
+      RATE_LIMIT_AUTH_BURST:
+        required: false
+        type: int
+        default: '5'
+        description: Token-bucket burst for login/register/change-password
+        group: rate-limit
+        choices: []
+        min: 1.0
+        max: 0.0
+        pattern: ''
+        secret: false
+        managed: ''
+        example: ''
+      SERVER_PORT:
+        required: true
+        type: int
+        default: ''
+        description: Port the auth API listens on
+        group: ''
+        choices: []
+        min: 0.0
+        max: 0.0
+        pattern: ''
+        secret: false
+        managed: port
+        example: ''
+      BREVO_API_KEY:
+        required: false
+        type: secret
+        default: ''
+        description: Brevo transactional API key used to send verification mail
+        group: email
+        choices: []
+        min: 0.0
+        max: 0.0
+        pattern: ''
+        secret: false
+        managed: ''
         example: ''
       RATE_LIMIT_AUTH_REPLENISH_SECS:
         required: false
@@ -317,11 +159,102 @@ contract:
         secret: false
         managed: ''
         example: ''
-      EMAIL_VERIFICATION_REQUIRED:
+      JWT_EXPIRATION:
         required: false
-        type: bool
-        default: 'false'
-        description: Require users to verify their email before public interactions; requires BREVO_API_KEY
+        type: int
+        default: '2592000000'
+        description: JWT lifetime in milliseconds (30 days by default)
+        group: jwt
+        choices: []
+        min: 60000.0
+        max: 0.0
+        pattern: ''
+        secret: false
+        managed: ''
+        example: ''
+      RATE_LIMIT_GENERAL_BURST:
+        required: false
+        type: int
+        default: '120'
+        description: Token-bucket burst for general routes
+        group: rate-limit
+        choices: []
+        min: 1.0
+        max: 0.0
+        pattern: ''
+        secret: false
+        managed: ''
+        example: ''
+      ECO_AUTH_DEFAULT_ROLE:
+        required: false
+        type: string
+        default: ''
+        description: Role assigned to new accounts (from the estate identity model)
+        group: ''
+        choices: []
+        min: 0.0
+        max: 0.0
+        pattern: ''
+        secret: false
+        managed: identity-roles
+        example: ''
+      ECO_AUTH_ROLES:
+        required: false
+        type: csv
+        default: ''
+        description: Roles accepted at registration (from the estate identity model)
+        group: ''
+        choices: []
+        min: 0.0
+        max: 0.0
+        pattern: ''
+        secret: false
+        managed: identity-roles
+        example: ''
+      SIGNUP_EVENT_URL:
+        required: false
+        type: url
+        default: ''
+        description: Ingest endpoint for the user.signed_up event (fire-and-forget)
+        group: ''
+        choices: []
+        min: 0.0
+        max: 0.0
+        pattern: ''
+        secret: false
+        managed: signup-event
+        example: ''
+      MONGODB_URI:
+        required: true
+        type: uri
+        default: ''
+        description: MongoDB connection string for the estate's managed database
+        group: ''
+        choices: []
+        min: 0.0
+        max: 0.0
+        pattern: ''
+        secret: false
+        managed: mongo-db
+        example: ''
+      API_BASE_URL:
+        required: false
+        type: url
+        default: ''
+        description: Public base URL clients use to reach this API; empty falls back to http://localhost:<port>/api
+        group: server
+        choices: []
+        min: 0.0
+        max: 0.0
+        pattern: ''
+        secret: false
+        managed: ''
+        example: ''
+      MAIL_FROM_EMAIL:
+        required: false
+        type: email
+        default: ''
+        description: Sender address for transactional mail
         group: email
         choices: []
         min: 0.0
@@ -343,6 +276,58 @@ contract:
         secret: false
         managed: ''
         example: ''
+      CORS_ALLOWED_ORIGINS:
+        required: false
+        type: csv-url
+        default: ''
+        description: Origins allowed to call this API; the first entry doubles as the app origin
+        group: ''
+        choices: []
+        min: 0.0
+        max: 0.0
+        pattern: ''
+        secret: false
+        managed: cors-origins
+        example: ''
+      EMAIL_VERIFICATION_PUBLIC_URL:
+        required: false
+        type: url
+        default: ''
+        description: Public origin for verification links; empty uses the first CORS origin
+        group: email
+        choices: []
+        min: 0.0
+        max: 0.0
+        pattern: ''
+        secret: false
+        managed: ''
+        example: ''
+      JWT_SECRET:
+        required: true
+        type: secret
+        default: ''
+        description: HS512 signing key shared by every estate service that validates tokens
+        group: ''
+        choices: []
+        min: 0.0
+        max: 0.0
+        pattern: ''
+        secret: false
+        managed: shared-jwt
+        example: ''
+      SESSION_REQUIRED:
+        required: false
+        type: bool
+        default: 'true'
+        description: 'Single-session enforcement: reject bearer tokens without an active session (re-login required after upgrade). Set false for a graceful legacy-token window.'
+        group: session
+        choices: []
+        min: 0.0
+        max: 0.0
+        pattern: ''
+        secret: false
+        managed: ''
+        example: ''
   db: mongodb@7
   network:
     inbound:
@@ -360,9 +345,9 @@ runtime:
   dependencies: []
 provenance:
   source: github-getecosphere:getecosphere/auth.git
-  commit: 0445aa84e9b2a56886ac6de17bcbb74bc80cee94
+  commit: c7afd43c3664af5308215dd3cd17faf75be6d678
   built_by: eco@0.4.1
-  built_at: 2026-08-22T14:07:09Z
+  built_at: 2026-08-21T01:29:28Z
   target: x86_64-unknown-linux-musl
 release:
 - 3.1.0

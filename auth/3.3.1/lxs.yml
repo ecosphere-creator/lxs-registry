@@ -1,0 +1,403 @@
+name: auth
+domain: auth
+version: 3.3.1
+publisher: stuff8
+status: unverified
+license: mit
+summary: 'Authentication: login, register, JWT, single active session, email verification, signup events'
+targets:
+- darwin/arm64
+- linux/amd64
+artifacts:
+  linux/amd64:
+    path: linux-amd64/auth
+    sha256: c6b2507002a6307464776fecf448b33c3bc85bcc824172295f26d8f99cddafa7
+    size: 14351184
+  darwin/arm64:
+    path: darwin-arm64/auth
+    sha256: 30f8b49bd3918f7725bcdf718fcdbf21e29f90dff58318a74ec41c05c7d555c1
+    size: 17025424
+contract:
+  version: 2
+  api: auth REST API
+  env:
+    required:
+    - JWT_SECRET
+    - MONGODB_URI
+    - SERVER_PORT
+    optional:
+    - JWT_EXPIRATION
+    - API_BASE_URL
+    - CORS_ALLOWED_ORIGINS
+    - RATE_LIMIT_GENERAL_BURST
+    - RATE_LIMIT_GENERAL_REPLENISH_SECS
+    - RATE_LIMIT_AUTH_BURST
+    - RATE_LIMIT_AUTH_REPLENISH_SECS
+    - EMAIL_VERIFICATION_REQUIRED
+    - EMAIL_VERIFICATION_TTL_HOURS
+    - PASSWORD_RESET_TTL_MINUTES
+    - EMAIL_VERIFICATION_PUBLIC_URL
+    - ECO_AUTH_DEFAULT_ROLE
+    - ECO_AUTH_ROLES
+    - BREVO_API_KEY
+    - MAIL_FROM_EMAIL
+    - MAIL_FROM_NAME
+    - EMAIL_RELAY_URL
+    - EMAIL_RELAY_TOKEN
+    - SIGNUP_EVENT_URL
+    - SIGNUP_EVENT_TOKEN
+    - SESSION_REQUIRED
+    defaults:
+      PASSWORD_RESET_TTL_MINUTES: '60'
+      JWT_EXPIRATION: '2592000000'
+      MAIL_FROM_NAME: Auth
+      SESSION_REQUIRED: 'true'
+      RATE_LIMIT_AUTH_REPLENISH_SECS: '10'
+      RATE_LIMIT_GENERAL_REPLENISH_SECS: '1'
+      RATE_LIMIT_AUTH_BURST: '5'
+      EMAIL_VERIFICATION_TTL_HOURS: '24'
+      EMAIL_VERIFICATION_REQUIRED: 'false'
+      RATE_LIMIT_GENERAL_BURST: '120'
+    fields:
+      API_BASE_URL:
+        required: false
+        type: url
+        default: ''
+        description: Public base URL clients use to reach this API; empty falls back to http://localhost:<port>/api
+        group: server
+        choices: []
+        min: 0.0
+        max: 0.0
+        pattern: ''
+        secret: false
+        managed: ''
+        example: ''
+      SESSION_REQUIRED:
+        required: false
+        type: bool
+        default: 'true'
+        description: 'Single-session enforcement: reject bearer tokens without an active session (re-login required after upgrade). Set false for a graceful legacy-token window.'
+        group: session
+        choices: []
+        min: 0.0
+        max: 0.0
+        pattern: ''
+        secret: false
+        managed: ''
+        example: ''
+      EMAIL_RELAY_TOKEN:
+        required: false
+        type: secret
+        default: ''
+        description: Hostname-scoped capability for the Eco Serve password-recovery relay
+        group: email
+        choices: []
+        min: 0.0
+        max: 0.0
+        pattern: ''
+        secret: false
+        managed: eco-serve-email-relay
+        example: ''
+      RATE_LIMIT_AUTH_BURST:
+        required: false
+        type: int
+        default: '5'
+        description: Token-bucket burst for login/register/change-password
+        group: rate-limit
+        choices: []
+        min: 1.0
+        max: 0.0
+        pattern: ''
+        secret: false
+        managed: ''
+        example: ''
+      SIGNUP_EVENT_TOKEN:
+        required: false
+        type: secret
+        default: ''
+        description: Bearer token for the signup event sink
+        group: ''
+        choices: []
+        min: 0.0
+        max: 0.0
+        pattern: ''
+        secret: false
+        managed: ''
+        example: ''
+      CORS_ALLOWED_ORIGINS:
+        required: false
+        type: csv-url
+        default: ''
+        description: Origins allowed to call this API; the first entry doubles as the app origin
+        group: ''
+        choices: []
+        min: 0.0
+        max: 0.0
+        pattern: ''
+        secret: false
+        managed: cors-origins
+        example: ''
+      RATE_LIMIT_GENERAL_BURST:
+        required: false
+        type: int
+        default: '120'
+        description: Token-bucket burst for general routes
+        group: rate-limit
+        choices: []
+        min: 1.0
+        max: 0.0
+        pattern: ''
+        secret: false
+        managed: ''
+        example: ''
+      EMAIL_VERIFICATION_REQUIRED:
+        required: false
+        type: bool
+        default: 'false'
+        description: Require users to verify their email before public interactions; requires BREVO_API_KEY
+        group: email
+        choices: []
+        min: 0.0
+        max: 0.0
+        pattern: ''
+        secret: false
+        managed: ''
+        example: ''
+      MONGODB_URI:
+        required: true
+        type: uri
+        default: ''
+        description: MongoDB connection string for the estate's managed database
+        group: ''
+        choices: []
+        min: 0.0
+        max: 0.0
+        pattern: ''
+        secret: false
+        managed: mongo-db
+        example: ''
+      RATE_LIMIT_AUTH_REPLENISH_SECS:
+        required: false
+        type: int
+        default: '10'
+        description: Seconds per token refill for credential routes
+        group: rate-limit
+        choices: []
+        min: 1.0
+        max: 0.0
+        pattern: ''
+        secret: false
+        managed: ''
+        example: ''
+      PASSWORD_RESET_TTL_MINUTES:
+        required: false
+        type: int
+        default: '60'
+        description: Minutes a one-time password reset link remains valid
+        group: email
+        choices: []
+        min: 5.0
+        max: 1440.0
+        pattern: ''
+        secret: false
+        managed: ''
+        example: ''
+      EMAIL_VERIFICATION_PUBLIC_URL:
+        required: false
+        type: url
+        default: ''
+        description: Public origin for verification links; empty uses the first CORS origin
+        group: email
+        choices: []
+        min: 0.0
+        max: 0.0
+        pattern: ''
+        secret: false
+        managed: ''
+        example: ''
+      SERVER_PORT:
+        required: true
+        type: int
+        default: ''
+        description: Port the auth API listens on
+        group: ''
+        choices: []
+        min: 0.0
+        max: 0.0
+        pattern: ''
+        secret: false
+        managed: port
+        example: ''
+      EMAIL_VERIFICATION_TTL_HOURS:
+        required: false
+        type: int
+        default: '24'
+        description: Hours a verification link stays valid
+        group: email
+        choices: []
+        min: 1.0
+        max: 8760.0
+        pattern: ''
+        secret: false
+        managed: ''
+        example: ''
+      JWT_SECRET:
+        required: true
+        type: secret
+        default: ''
+        description: HS512 signing key shared by every estate service that validates tokens
+        group: ''
+        choices: []
+        min: 0.0
+        max: 0.0
+        pattern: ''
+        secret: false
+        managed: shared-jwt
+        example: ''
+      BREVO_API_KEY:
+        required: false
+        type: secret
+        default: ''
+        description: Brevo transactional API key used to send verification mail
+        group: email
+        choices: []
+        min: 0.0
+        max: 0.0
+        pattern: ''
+        secret: false
+        managed: ''
+        example: ''
+      MAIL_FROM_EMAIL:
+        required: false
+        type: email
+        default: ''
+        description: Sender address for transactional mail
+        group: email
+        choices: []
+        min: 0.0
+        max: 0.0
+        pattern: ''
+        secret: false
+        managed: ''
+        example: ''
+      MAIL_FROM_NAME:
+        required: false
+        type: string
+        default: Auth
+        description: Sender display name for transactional mail
+        group: email
+        choices: []
+        min: 0.0
+        max: 0.0
+        pattern: ''
+        secret: false
+        managed: ''
+        example: ''
+      JWT_EXPIRATION:
+        required: false
+        type: int
+        default: '2592000000'
+        description: JWT lifetime in milliseconds (30 days by default)
+        group: jwt
+        choices: []
+        min: 60000.0
+        max: 0.0
+        pattern: ''
+        secret: false
+        managed: ''
+        example: ''
+      RATE_LIMIT_GENERAL_REPLENISH_SECS:
+        required: false
+        type: int
+        default: '1'
+        description: Seconds per token refill for general routes
+        group: rate-limit
+        choices: []
+        min: 1.0
+        max: 0.0
+        pattern: ''
+        secret: false
+        managed: ''
+        example: ''
+      EMAIL_RELAY_URL:
+        required: false
+        type: url
+        default: ''
+        description: Eco Serve password-recovery relay endpoint; only injected for an active temporary hostname
+        group: email
+        choices: []
+        min: 0.0
+        max: 0.0
+        pattern: ''
+        secret: false
+        managed: eco-serve-email-relay
+        example: ''
+      ECO_AUTH_DEFAULT_ROLE:
+        required: false
+        type: string
+        default: ''
+        description: Role assigned to new accounts (from the estate identity model)
+        group: ''
+        choices: []
+        min: 0.0
+        max: 0.0
+        pattern: ''
+        secret: false
+        managed: identity-roles
+        example: ''
+      ECO_AUTH_ROLES:
+        required: false
+        type: csv
+        default: ''
+        description: Roles accepted at registration (from the estate identity model)
+        group: ''
+        choices: []
+        min: 0.0
+        max: 0.0
+        pattern: ''
+        secret: false
+        managed: identity-roles
+        example: ''
+      SIGNUP_EVENT_URL:
+        required: false
+        type: url
+        default: ''
+        description: Ingest endpoint for the user.signed_up event (fire-and-forget)
+        group: ''
+        choices: []
+        min: 0.0
+        max: 0.0
+        pattern: ''
+        secret: false
+        managed: signup-event
+        example: ''
+  db: mongodb@7
+  network:
+    inbound:
+    - http
+    outbound:
+    - http
+    - https
+  resources:
+    memory: 64m
+    disk: 128m
+    startup_seconds: 5
+runtime:
+  base: self-contained-static
+  libc: musl
+  dependencies: []
+provenance:
+  source: github-getecosphere:getecosphere/auth.git
+  commit: d28de29b1cce4496fa8f11f1f1c02006024c304b
+  built_by: eco@0.4.1
+  built_at: 2026-08-22T19:30:52Z
+  target: x86_64-unknown-linux-musl
+release:
+- 3.3.1
+docs:
+- README.md
+- api.md
+- changelog.md
+- examples.sh
+- gotchas.md
+- openapi.json

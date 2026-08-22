@@ -1,0 +1,56 @@
+name: articles-ui
+domain: articles
+version: 0.2.0
+publisher: stuff8
+status: unverified
+license: mit
+summary: 'Standalone native SSR UI for the articles domain: /articles + /articles/[slug] with SEO/OpenGraph'
+targets:
+- darwin/arm64
+- linux/amd64
+artifacts:
+  darwin/arm64:
+    path: darwin-arm64/articles-ui
+    sha256: ff91fc73251eb3a49c82539b1c0cc413406af0fa5809ddcea7650dff9d9922ce
+    size: 5820688
+  linux/amd64:
+    path: linux-amd64/articles-ui
+    sha256: b4a31b8190035c3e2a769844318273c7a9827b3fcd43932cf477a3f0415c1f1d
+    size: 4810360
+contract:
+  version: 1
+  api: 'articles-ui pages: GET /articles/, GET /articles/[slug]/'
+  env:
+    required:
+    - SERVER_PORT
+    optional:
+    - ARTICLES_API_URL
+    - PUBLIC_SITE_URL
+    defaults: {}
+    fields: {}
+  db: none
+  network:
+    inbound:
+    - http
+    outbound:
+    - https
+  resources:
+    memory: 128m
+    disk: 64m
+    startup_seconds: 5
+runtime:
+  base: self-contained-static
+  libc: musl
+  dependencies: []
+provenance:
+  source: https://github.com/getecosphere/articles.git
+  commit: 4c2af36b3b61e7b7bb2701b44a4639663a5d2761
+  built_by: eco@0.4.1
+  built_at: 2026-08-22T14:53:48Z
+  target: x86_64-unknown-linux-musl
+release:
+- 0.2.0
+docs:
+- README.md
+- api.md
+- changelog.md
